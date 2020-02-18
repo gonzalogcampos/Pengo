@@ -23,7 +23,6 @@ SMFHeaders := -I/usr/include/SFML
 SFMLLibraries := -lsfml-system -lsfml-window -lsfml-graphics -lsfml-network -lsfml-audio
 
 
-
 #INCLUDES && LIBRAIES
 INCLUDES := $(addprefix -I,$(wildcard src/. src/*/. src/*/*/.))
 LIBRAIES := $(SFMLLibraries)
