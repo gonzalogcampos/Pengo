@@ -1,10 +1,10 @@
-#include <Pengo.h>
+#include <Game.h>
 
 int main() {
 
-  Pengo::getInstance()->Start();
-  Pengo::getInstance()->Run();
-  Pengo::getInstance()->Close();  
+  Game::getInstance()->Start();
+  Game::getInstance()->Run();
+  Game::getInstance()->Close();  
 
   return 0;
 }

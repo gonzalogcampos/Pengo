@@ -1,7 +1,16 @@
-#include <SpriteBank.h>
+#include <Render.h>
 #include <Console.h>
 
-void SpriteBank::init()
+
+const int scale = 3;
+
+sf::Texture T1, T2, T3, T4;
+sf::Sprite ice;
+sf::Sprite pengo;
+sf::Sprite snobee;
+sf::Sprite background;
+
+void Render::init()
 {
     //Cargo la imagen donde reside la textura del sprite
     if (!T1.loadFromFile("res/T1.png")) {
@@ -27,10 +36,15 @@ void SpriteBank::init()
         exit(0);
     }
 
+
+
+
+
+
 }
 
 
-sf::Sprite SpriteBank::getSprite(int texture, int x_init, int y_init, int x_end, int y_end)
+sf::Sprite Render::getSprite(int texture, int x_init, int y_init, int x_end, int y_end)
 {
     sf::Sprite r = sf::Sprite(T1);
     if(texture == 2) r = sf::Sprite(T2);
@@ -38,7 +52,7 @@ sf::Sprite SpriteBank::getSprite(int texture, int x_init, int y_init, int x_end,
     else if(texture == 4) r = sf::Sprite(T4);
 
     r.setTextureRect(sf::IntRect(x_init, y_init, x_end, y_end));
-    r.setScale(3,3);
+    r.setScale(scale,scale);
 
     return r;
 }
