@@ -20,6 +20,11 @@ class Render
                 return &instance;
             }
 
+        /*
+        If window is open returns true, else false
+        */
+        bool run();
+
     private:
         Render(){init();}
         sf::Sprite getSprite(int texture, int x_init, int y_init, int x_end, int y_end);

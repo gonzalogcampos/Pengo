@@ -2,9 +2,7 @@
 
 int main() {
 
-  Game::getInstance()->Start();
-  Game::getInstance()->Run();
-  Game::getInstance()->Close();  
+  Game::getInstance()->run();
 
   return 0;
 }

@@ -6,6 +6,6 @@ class Ice : public GameObject
     public:  
         Ice(int x, int y) : GameObject(x, y){}
         
-        void update(float dt){};
+        void update(float dt);
 
 };

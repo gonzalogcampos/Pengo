@@ -9,11 +9,9 @@ class GameObject
 
         ~GameObject(){};
 
-        void update(float dt);
+        void update(float dt){};
 
-        void render();
-
-        void toKill(){this->toKill = true;}
+        void kill(){this->toKill = true;}
 
         bool getKill(){return toKill;};
     private:

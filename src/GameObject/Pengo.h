@@ -10,5 +10,5 @@ class Pengo : public GameObject
 
     };
 
-    void update(float dt){};
+    void update(float dt);
 };

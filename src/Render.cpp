@@ -56,3 +56,8 @@ sf::Sprite Render::getSprite(int texture, int x_init, int y_init, int x_end, int
 
     return r;
 }
+
+bool Render::run()
+{
+    return true;
+}

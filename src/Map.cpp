@@ -125,7 +125,7 @@ GameObject* Map::createPengo(int x,int y)
     if(map[x] !=nullptr && map[x][y] == nullptr)
     {
         
-        map[x][y] = new GameObject();
+        map[x][y] = new Pengo(x, y);
         return map[x][y];
     }
     return nullptr;
@@ -139,7 +139,7 @@ GameObject* Map::createIce(int x,int y)
     if(map[x] !=nullptr && map[x][y] == nullptr)
     {
         
-        map[x][y] = new GameObject();
+        map[x][y] = new GameObject(x, y);
         return map[x][y];
     }
     return nullptr;
@@ -153,7 +153,7 @@ GameObject* Map::createSnobee(int x,int y)
     if(map[x] !=nullptr && map[x][y] == nullptr)
     {
         
-        map[x][y] = new GameObject();
+        map[x][y] = new GameObject(x, y);
         return map[x][y];
     }
     return nullptr;

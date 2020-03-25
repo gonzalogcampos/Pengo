@@ -7,13 +7,7 @@ class IGameState
 public:
 
     enum stateType {
-        MENU,
-        PLAY,
-        PAUSE,
-        END,
-        INTRO,
-        TONEXT,
-        CREDITS
+        PLAY
     };
 
     virtual ~IGameState() {};

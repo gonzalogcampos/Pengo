@@ -9,7 +9,7 @@ void PlayState::initState()
 
 void PlayState::update(float dt)
 {
-   Map::getInstance()->update();
+   Map::getInstance()->update(dt);
    Map::getInstance()->draw();
 }
 
