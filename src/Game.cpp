@@ -23,16 +23,19 @@ void Game::run()
 
 
     Clock clock;
-    while(Render::getInstance()->run())
+    while(Render::getInstance()->isWindowOpen())
     {
         if(clock.canContinue())
         {
             float t = clock.getElapsedTime();
+            Render::getInstance()->preLoop(t);
             state->update(t);
+            Render::getInstance()->postLoop();
         }
     }
 }
 
 void Game::start()
-{  
+{
+    Render::getInstance()->init();
 }

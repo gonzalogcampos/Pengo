@@ -4,8 +4,11 @@
 class Ice : public GameObject
 {
     public:  
-        Ice(int x, int y) : GameObject(x, y){}
-        
+        Ice(int x, int y);
+
+        ~Ice(){};
+
         void update(float dt);
 
+        void draw();
 };

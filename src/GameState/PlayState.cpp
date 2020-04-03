@@ -4,6 +4,7 @@
 void PlayState::initState()
 {
     type = IGameState::PLAY;
+    Map::getInstance()->init();
 } 
 
 

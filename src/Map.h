@@ -1,13 +1,23 @@
 #pragma once
 
 class GameObject;
+class Pengo;
+class Ice;
+class SnoBee;
+
+const unsigned int MAP_W = 14;
+const unsigned int MAP_H = 16;
 
 class Map
 {
     private:
-        GameObject* map[10][10];
+        GameObject* map[MAP_W][MAP_H];
+        Pengo* pengo;
         Map();
         ~Map();
+
+
+        unsigned int spriteBack;
     
     public:
         /*
@@ -20,60 +30,22 @@ class Map
         }
 
 
-        /*
-        Calls the destructor of all the GameObjects in the map
-        */
+        void init();
         void clear();
-
-        /*
-        Returns the Game Object located in the position xy. Returns null if it is empty
-        */
         GameObject* getGameobject(int x, int y);
-
-        /*
-        Returns the Pengo iten in the map or null if there is no Pengo
-        */
-        GameObject* getPengo();
-
-        /*
-        Calls the draw() function of all the Game Objects in the map
-        */
+        Pengo* getPengo();
         void draw();
-
-        /*
-        Allocate gameObject at the xy position, returns true if xy was empty and false if has a Game Object
-        */
         bool put(GameObject* gameObject, int x, int y);
-
-        /*
-        Removes the Game Object located in the position xy
-        */
         bool push(int x, int y);
-
-        /*
-        If the gameObject is in the map returns true and the xy position, else returns false
-        */
         bool getPosition(GameObject* gameObject, int &x, int &y);
-
-        /*
-        Creates a Pengo in the xy position, then returns the pengo. Returns null if there is something in xy
-        */
-        GameObject* createPengo(int x, int y);
-
-        /*
-        Creates an ice in the xy position, then returns the pengo. Returns null if there is something in xy
-        */
-        GameObject* createIce(int x, int y);
-
-        /*
-        Creates a Sno-Bee in the xy position, then returns the pengo. Returns null if there is something in xy
-        */
-        GameObject* createSnobee(int x, int y);
-
-        /*
-        Calls the update(float dt) function of all the Game Objects in the map
-        */
+        Pengo* createPengo(int x, int y);
+        Ice* createIce(int x, int y);
+        SnoBee* createSnobee(int x, int y);
         void update(float dt);
+        bool moveUp(GameObject* gameobject);
+        bool moveDown(GameObject* gameobject);
+        bool moveLeft(GameObject* gameobject);
+        bool moveRight(GameObject* gameobject);
 
 
 

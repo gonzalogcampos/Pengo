@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../bin/lib/libmodulos.a  CMakeFiles/modulos.dir/src/GameObject/Ice.cpp.o CMakeFiles/modulos.dir/src/GameObject/Pengo.cpp.o CMakeFiles/modulos.dir/src/GameObject/SnoBee.cpp.o CMakeFiles/modulos.dir/src/GameState/PlayState.cpp.o CMakeFiles/modulos.dir/src/Render/Render.cpp.o CMakeFiles/modulos.dir/src/Console.cpp.o CMakeFiles/modulos.dir/src/Game.cpp.o CMakeFiles/modulos.dir/src/Map.cpp.o
+/usr/bin/ranlib ../bin/lib/libmodulos.a

@@ -1,0 +1,1 @@
+/usr/bin/c++    -std=c++1y -Wall -Wextra   CMakeFiles/Pengo.dir/src/main.cpp.o  -o ../bin/Pengo -rdynamic ../bin/lib/libmodulos.a -lsfml-system -lsfml-window -lsfml-graphics -lsfml-network -lsfml-audio 

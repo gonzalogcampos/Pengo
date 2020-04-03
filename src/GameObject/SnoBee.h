@@ -4,7 +4,10 @@
 class SnoBee : public GameObject
 {
     public:
-        SnoBee(int x, int y) : GameObject(x, y){}
+        SnoBee(int x, int y);
+        ~SnoBee();
 
-        void update(float dt){};
+        void update(float dt);
+
+        void draw();
 };
