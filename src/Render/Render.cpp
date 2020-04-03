@@ -430,7 +430,6 @@ void Animation::draw(float dt, Rvect position, float rotation, float scale, bool
     this->dt += dt;
 
     float et = 1.f/fps;
-    std::cout<<"estimated time betwen: "<<et<<"\n";
     if(this->dt>et)
     {
         this->dt = 0.f;
