@@ -3,7 +3,7 @@
 #include "Map.h"
 #include "Render.h"
 
-const float VELOCITY = .2f;
+const float VELOCITY = .3f;
 
 Pengo::Pengo(int x, int y) : GameObject(x, y)
 {
@@ -46,10 +46,31 @@ void Pengo::update(float dt)
 
     if(state == S_D || state == S_U || state == S_L ||state == S_R)
     {
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+        {
+            switch (state)
+            {
+            case S_D:
+                Map::getInstance()->hits(x, y+1, 2);
+                break;
+            case S_U:
+                Map::getInstance()->hits(x, y-1, 0);
+                break;
+            case S_L:
+                Map::getInstance()->hits(x-1, y, 3);
+                break;
+            case S_R:
+                Map::getInstance()->hits(x+1, y, 1);
+                break;
+            
+            default:
+                break;
+            }
+        }
 
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
         {
-            if(Map::getInstance()->moveUp(this))
+            if(Map::getInstance()->pengoMoving(this, 0))
             {
                 state = W_U;
                 walking_Time = 0.f;
@@ -63,7 +84,7 @@ void Pengo::update(float dt)
 
         }else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
         {
-            if(Map::getInstance()->moveDown(this))
+            if(Map::getInstance()->pengoMoving(this, 2))
             {
                 state = W_D;
                 walking_Time = 0.f;
@@ -76,7 +97,7 @@ void Pengo::update(float dt)
 
         }else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
         {
-            if(Map::getInstance()->moveLeft(this))
+            if(Map::getInstance()->pengoMoving(this, 3))
             {
                 state = W_L;
                 walking_Time = 0.f;
@@ -90,7 +111,7 @@ void Pengo::update(float dt)
         }else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         {
 
-            if(Map::getInstance()->moveRight(this))
+            if(Map::getInstance()->pengoMoving(this, 1))
             {
                 state = W_R;
                 walking_Time = 0.f;

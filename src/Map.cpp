@@ -178,9 +178,7 @@ SnoBee* Map::createSnobee(int x,int y)
 Calls the update(float dt) function of all the Game Objects in the map
 */
 void Map::update(float dt)
-{
-    int s = sizeof(map)/sizeof(map[0]);
-    
+{    
     for(int x = 0; x<MAP_W; x++)
         for(int y = 0; y<MAP_H; y++)
             if(map[x]!=nullptr && map[x][y]!=nullptr)
@@ -280,37 +278,9 @@ void Map::init()
 
 }
 
-bool Map::moveUp(GameObject* gameobject)
-{   
-    if(gameobject==nullptr)
-        return false;
-    
-    int x = -1;
-    int y = -1;
-    for(int i = 0; i<MAP_W; i++)
-    {
-        for(int j = 0 ; j<MAP_H; j++)
-        {
-            if(map[i]!=nullptr && map[j]!=nullptr && map[i][j] == gameobject)
-            {
-                x = i;
-                y = j;
-            }
-        }
-    }
-
-    if(x>=0 && x<MAP_W && (y-1)>=0 && (y-1)<MAP_H && map[x][y-1]==nullptr)
-    {
-        map[x][y-1] = map[x][y];
-        map[x][y] = nullptr;
-        return true;
-    }
-    return false;
-}
-bool Map::moveDown(GameObject* gameobject)
+bool Map::pengoMoving(GameObject* pengo, int dir)
 {
-
-    if(gameobject==nullptr)
+    if(pengo==nullptr)
         return false;
     
     int x = -1;
@@ -319,25 +289,85 @@ bool Map::moveDown(GameObject* gameobject)
     {
         for(int j = 0; j<MAP_H; j++)
         {
-            if(map[i]!=nullptr && map[j]!=nullptr && map[i][j] == gameobject)
+            if(map[i]!=nullptr && map[j]!=nullptr && map[i][j] == pengo)
             {
                 x = i;
                 y = j;
             }
         }
     }
-    if(x>=0 && x<MAP_W && (y+1)>=0 && (y+1)<MAP_H && map[x][y+1]==nullptr)
+    int dx = x;
+    int dy = y;
+    switch (dir)
     {
-        map[x][y+1] = map[x][y];
+    case 0:
+        dy--;
+        break;
+    case 1:
+        dx++;
+        break;
+    case 2:
+        dy++;
+        break;
+    case 3:
+        dx--;
+        break;
+    default:
+        break;
+    }
+
+    if(dx>=0 && dx<MAP_W && dy>=0 && dy<MAP_H && map[dx][dy]==nullptr)
+    {
+        map[dx][dy] = map[x][y];
         map[x][y] = nullptr;
         return true;
     }
     return false;
 }
 
-bool Map::moveLeft(GameObject* gameobject)
+
+void Map::hits(int x,int y, int dir)
 {
-    if(gameobject==nullptr)
+    if(x<0 || x>=MAP_W || y<0 || y>=MAP_H)
+        return;
+
+    if(map[x][y]==nullptr)
+        return;
+    
+    if(Ice* ice = dynamic_cast<Ice*>(map[x][y])){
+        int dx = x;
+        int dy = y;
+        switch (dir)
+        {
+        case 0:
+            dy--;
+            break;
+        case 1:
+            dx++;
+            break;
+        case 2:
+            dy++;
+            break;
+        case 3:
+            dx--;
+            break;
+        }
+
+        if(dx>=0 && dx<MAP_W && dy>=0 && dy<MAP_H && map[dx][dy]==nullptr)
+        {
+            ice->hits(dir);
+            map[dx][dy] = map[x][y];
+            map[x][y] = nullptr;
+        }else
+        {
+            push(x, y);
+        }
+    }
+}
+
+bool Map::iceMoving(GameObject* ice, int dir)
+{
+    if(ice==nullptr)
         return false;
     
     int x = -1;
@@ -346,45 +376,36 @@ bool Map::moveLeft(GameObject* gameobject)
     {
         for(int j = 0; j<MAP_H; j++)
         {
-            if(map[i]!=nullptr && map[j]!=nullptr && map[i][j] == gameobject)
+            if(map[i]!=nullptr && map[j]!=nullptr && map[i][j] == ice)
             {
                 x = i;
                 y = j;
             }
         }
     }
-
-    if((x-1)>=0 && (x-1)<MAP_W && y>=0 && y<MAP_H && map[x-1][y]==nullptr)
+    int dx = x;
+    int dy = y;
+    switch (dir)
     {
-        map[x-1][y] = map[x][y];
-        map[x][y] = nullptr;
-        return true;
-    }
-    return false;
-}
-
-bool Map::moveRight(GameObject* gameobject)
-{
-    if(gameobject==nullptr)
-        return false;
-    
-    int x = -1;
-    int y = -1;
-    for(int i = 0; i<MAP_W; i++)
-    {
-        for(int j = 0; j<MAP_H; j++)
-        {
-            if(map[i]!=nullptr && map[j]!=nullptr && map[i][j] == gameobject)
-            {
-                x = i;
-                y = j;
-            }
-        }
+    case 0:
+        dy--;
+        break;
+    case 1:
+        dx++;
+        break;
+    case 2:
+        dy++;
+        break;
+    case 3:
+        dx--;
+        break;
+    default:
+        break;
     }
 
-    if((x+1)>=0 && (x+1)<MAP_W && y>=0 && y<MAP_H && map[x+1][y]==nullptr)
+    if(dx>=0 && dx<MAP_W && dy>=0 && dy<MAP_H && map[dx][dy]==nullptr)
     {
-        map[x+1][y] = map[x][y];
+        map[dx][dy] = map[x][y];
         map[x][y] = nullptr;
         return true;
     }

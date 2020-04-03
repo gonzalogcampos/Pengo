@@ -5,8 +5,8 @@ class Pengo;
 class Ice;
 class SnoBee;
 
-const unsigned int MAP_W = 13;
-const unsigned int MAP_H = 15;
+const int MAP_W = 13;
+const int MAP_H = 15;
 
 class Map
 {
@@ -45,7 +45,9 @@ class Map
         bool moveUp(GameObject* gameobject);
         bool moveDown(GameObject* gameobject);
         bool moveLeft(GameObject* gameobject);
-        bool moveRight(GameObject* gameobject);
+        bool pengoMoving(GameObject* pengo, int dir);
+        void hits(int x, int y, int dir);
+        bool iceMoving(GameObject* ice, int dir);
 
 
 
