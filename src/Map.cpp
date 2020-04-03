@@ -276,6 +276,16 @@ void Map::init()
     createIce(11,13);
     createIce(11,14);
 
+    createSnobee(4, 6);
+    createSnobee(7, 4);
+    createSnobee(9, 5);
+    createSnobee(12, 10);
+    createSnobee(2, 9);
+    
+
+
+
+
 }
 
 bool Map::pengoMoving(GameObject* pengo, int dir)
@@ -408,6 +418,63 @@ bool Map::iceMoving(GameObject* ice, int dir)
         map[dx][dy] = map[x][y];
         map[x][y] = nullptr;
         return true;
+    }
+    return false;
+}
+
+
+bool Map::snobeeMoving(GameObject* snobee, int  dir)
+{
+    if(snobee==nullptr)
+        return false;
+    
+    int x = -1;
+    int y = -1;
+    for(int i = 0; i<MAP_W; i++)
+    {
+        for(int j = 0; j<MAP_H; j++)
+        {
+            if(map[i]!=nullptr && map[j]!=nullptr && map[i][j] == snobee)
+            {
+                x = i;
+                y = j;
+            }
+        }
+    }
+    int dx = x;
+    int dy = y;
+    switch (dir)
+    {
+    case 0:
+        dy--;
+        break;
+    case 1:
+        dx++;
+        break;
+    case 2:
+        dy++;
+        break;
+    case 3:
+        dx--;
+        break;
+    default:
+        break;
+    }
+
+    if(dx>=0 && dx<MAP_W && dy>=0 && dy<MAP_H )
+    {   if(map[dx][dy]==nullptr)
+        {
+            map[dx][dy] = map[x][y];
+            map[x][y] = nullptr;
+            return true;
+        }
+        if(map[dx][dy]==pengo)
+        {
+            delete pengo;
+            map[dx][dy]=map[x][y];
+            map[x][y]=nullptr;
+            return true;
+        }
     }
     return false;
 }

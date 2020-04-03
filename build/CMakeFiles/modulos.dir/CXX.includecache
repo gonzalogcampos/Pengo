@@ -99,6 +99,10 @@ GameObject.h
 /home/usuario/Documentos/Pengo/src/GameObject/SnoBee.cpp
 SnoBee.h
 /home/usuario/Documentos/Pengo/src/GameObject/SnoBee.h
+Render.h
+/home/usuario/Documentos/Pengo/src/GameObject/Render.h
+Map.h
+/home/usuario/Documentos/Pengo/src/GameObject/Map.h
 
 /home/usuario/Documentos/Pengo/src/GameObject/SnoBee.h
 GameObject.h

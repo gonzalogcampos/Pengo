@@ -25,6 +25,8 @@ CMakeFiles/modulos.dir/src/GameObject/Pengo.cpp.o
  /home/usuario/Documentos/Pengo/src/GameObject/Pengo.cpp
  /home/usuario/Documentos/Pengo/src/GameObject/Pengo.h
 CMakeFiles/modulos.dir/src/GameObject/SnoBee.cpp.o
+ ../src/Map.h
+ ../src/Render/Render.h
  /home/usuario/Documentos/Pengo/src/GameObject/GameObject.h
  /home/usuario/Documentos/Pengo/src/GameObject/SnoBee.cpp
  /home/usuario/Documentos/Pengo/src/GameObject/SnoBee.h

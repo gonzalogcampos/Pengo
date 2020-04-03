@@ -42,12 +42,10 @@ class Map
         Ice* createIce(int x, int y);
         SnoBee* createSnobee(int x, int y);
         void update(float dt);
-        bool moveUp(GameObject* gameobject);
-        bool moveDown(GameObject* gameobject);
-        bool moveLeft(GameObject* gameobject);
         bool pengoMoving(GameObject* pengo, int dir);
         void hits(int x, int y, int dir);
         bool iceMoving(GameObject* ice, int dir);
+        bool snobeeMoving(GameObject* snobee, int dir);
 
 
 
