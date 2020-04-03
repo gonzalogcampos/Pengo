@@ -12,6 +12,8 @@ CMakeFiles/modulos.dir/src/Game.cpp.o: ../src/Game.cpp
 CMakeFiles/modulos.dir/src/Game.cpp.o: ../src/Game.h
 
 CMakeFiles/modulos.dir/src/GameObject/Ice.cpp.o: ../src/GameObject/GameObject.h
+CMakeFiles/modulos.dir/src/GameObject/Ice.cpp.o: ../src/Map.h
+CMakeFiles/modulos.dir/src/GameObject/Ice.cpp.o: ../src/Render/Render.h
 CMakeFiles/modulos.dir/src/GameObject/Ice.cpp.o: ../src/GameObject/Ice.cpp
 CMakeFiles/modulos.dir/src/GameObject/Ice.cpp.o: ../src/GameObject/Ice.h
 

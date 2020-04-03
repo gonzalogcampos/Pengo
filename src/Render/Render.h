@@ -116,7 +116,7 @@ class Render
 
         bool drawSprite(Rint sprite);
 
-        bool drawSprite(Rint sprite, Rvect position, float rotation = 0.f, float scale = 0.f, bool centered = true);
+        bool drawSprite(Rint sprite, Rvect position, float rotation = 0.f, float scale = 1.f, bool centered = true);
 
         //Animation functions
 

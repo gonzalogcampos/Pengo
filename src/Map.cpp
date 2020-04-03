@@ -200,6 +200,10 @@ void Map::init()
     spriteBack = Render::getInstance()->createSprite("res/T2.png", Rrect(0, 0, 223, 255) );
 
     createPengo(0, 0);
+    createIce(5,5);
+    createIce(5,6);
+    createIce(5,7);
+    createIce(5,8);
 }
 
 bool Map::moveUp(GameObject* gameobject)

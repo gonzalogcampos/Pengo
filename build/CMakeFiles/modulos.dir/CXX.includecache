@@ -71,6 +71,12 @@ IGameState.h
 /home/usuario/Documentos/Pengo/src/GameObject/Ice.cpp
 Ice.h
 /home/usuario/Documentos/Pengo/src/GameObject/Ice.h
+Map.h
+/home/usuario/Documentos/Pengo/src/GameObject/Map.h
+Render.h
+/home/usuario/Documentos/Pengo/src/GameObject/Render.h
+iostream
+-
 
 /home/usuario/Documentos/Pengo/src/GameObject/Ice.h
 GameObject.h

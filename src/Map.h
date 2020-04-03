@@ -5,8 +5,8 @@ class Pengo;
 class Ice;
 class SnoBee;
 
-const unsigned int MAP_W = 14;
-const unsigned int MAP_H = 16;
+const unsigned int MAP_W = 13;
+const unsigned int MAP_H = 15;
 
 class Map
 {

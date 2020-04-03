@@ -8,25 +8,25 @@ const float VELOCITY = .2f;
 Pengo::Pengo(int x, int y) : GameObject(x, y)
 {
     anim_SD = Render::getInstance()->createAnimation(15);
-    Render::getInstance()->addFrameToAnimation(anim_SD, Render::getInstance()->createSprite("res/T3.png",Rrect(0,0,15,15)));
+    Render::getInstance()->addFrameToAnimation(anim_SD, Render::getInstance()->createSprite("res/T3.png",Rrect(0,0,16,16)));
     anim_SU = Render::getInstance()->createAnimation(15);
-    Render::getInstance()->addFrameToAnimation(anim_SU, Render::getInstance()->createSprite("res/T3.png",Rrect(0,0,15,15)));
+    Render::getInstance()->addFrameToAnimation(anim_SU, Render::getInstance()->createSprite("res/T3.png",Rrect(80,17,16,16)));
     anim_SL = Render::getInstance()->createAnimation(15);
-    Render::getInstance()->addFrameToAnimation(anim_SL, Render::getInstance()->createSprite("res/T3.png",Rrect(0,0,15,15)));
+    Render::getInstance()->addFrameToAnimation(anim_SL, Render::getInstance()->createSprite("res/T3.png",Rrect(48,0,16,16)));
     anim_SR = Render::getInstance()->createAnimation(15);
-    Render::getInstance()->addFrameToAnimation(anim_SR, Render::getInstance()->createSprite("res/T3.png",Rrect(0,0,15,15)));
+    Render::getInstance()->addFrameToAnimation(anim_SR, Render::getInstance()->createSprite("res/T3.png",Rrect(112,0,16,16)));
     anim_WD = Render::getInstance()->createAnimation(15);
-    Render::getInstance()->addFrameToAnimation(anim_WD, Render::getInstance()->createSprite("res/T3.png",Rrect(0,0,15,15)));
-    Render::getInstance()->addFrameToAnimation(anim_WD, Render::getInstance()->createSprite("res/T3.png",Rrect(15,0,15,15)));
+    Render::getInstance()->addFrameToAnimation(anim_WD, Render::getInstance()->createSprite("res/T3.png",Rrect(0,0,16,16)));
+    Render::getInstance()->addFrameToAnimation(anim_WD, Render::getInstance()->createSprite("res/T3.png",Rrect(16,0,16,16)));
     anim_WU = Render::getInstance()->createAnimation(15);
-    Render::getInstance()->addFrameToAnimation(anim_WU, Render::getInstance()->createSprite("res/T3.png",Rrect(0,0,15,15)));
-    Render::getInstance()->addFrameToAnimation(anim_WU, Render::getInstance()->createSprite("res/T3.png",Rrect(15,0,15,15)));
+    Render::getInstance()->addFrameToAnimation(anim_WU, Render::getInstance()->createSprite("res/T3.png",Rrect(64,0,16,16)));
+    Render::getInstance()->addFrameToAnimation(anim_WU, Render::getInstance()->createSprite("res/T3.png",Rrect(80,0,16,16)));
     anim_WL = Render::getInstance()->createAnimation(15);
-    Render::getInstance()->addFrameToAnimation(anim_WL, Render::getInstance()->createSprite("res/T3.png",Rrect(0,0,15,15)));
-    Render::getInstance()->addFrameToAnimation(anim_WL, Render::getInstance()->createSprite("res/T3.png",Rrect(15,0,15,15)));
+    Render::getInstance()->addFrameToAnimation(anim_WL, Render::getInstance()->createSprite("res/T3.png",Rrect(32,0,16,16)));
+    Render::getInstance()->addFrameToAnimation(anim_WL, Render::getInstance()->createSprite("res/T3.png",Rrect(48,0,16,16)));
     anim_WR = Render::getInstance()->createAnimation(15);
-    Render::getInstance()->addFrameToAnimation(anim_WR, Render::getInstance()->createSprite("res/T3.png",Rrect(0,0,15,15)));
-    Render::getInstance()->addFrameToAnimation(anim_WR, Render::getInstance()->createSprite("res/T3.png",Rrect(15,0,15,15)));
+    Render::getInstance()->addFrameToAnimation(anim_WR, Render::getInstance()->createSprite("res/T3.png",Rrect(96,0,16, 16)));
+    Render::getInstance()->addFrameToAnimation(anim_WR, Render::getInstance()->createSprite("res/T3.png",Rrect(112,0,16,16)));
 
 
     state= S_D;
@@ -121,32 +121,32 @@ void Pengo::update(float dt)
 
 void Pengo::draw()
 {
-    int delay = (1-(walking_Time/VELOCITY))*15;
+    int delay = (1-(walking_Time/VELOCITY))*16;
     switch (state)
     {
     case S_D:
-        Render::getInstance()->drawAnimation(anim_SD, Rvect(x*15+8, y*15+8), 0.f, 1.f, false);
+        Render::getInstance()->drawAnimation(anim_SD, Rvect(x*16+8, y*16+8), 0.f, 1.f, false);
         break;
     case S_U:
-        Render::getInstance()->drawAnimation(anim_SU, Rvect(x*15+8, y*15+8), 0.f, 1.f, false);
+        Render::getInstance()->drawAnimation(anim_SU, Rvect(x*16+8, y*16+8), 0.f, 1.f, false);
         break;
     case S_L:
-        Render::getInstance()->drawAnimation(anim_SL, Rvect(x*15+8, y*15+8), 0.f, 1.f, false);
+        Render::getInstance()->drawAnimation(anim_SL, Rvect(x*16+8, y*16+8), 0.f, 1.f, false);
         break;
     case S_R:
-        Render::getInstance()->drawAnimation(anim_SR, Rvect(x*15+8, y*15+8), 0.f, 1.f, false);
+        Render::getInstance()->drawAnimation(anim_SR, Rvect(x*16+8, y*16+8), 0.f, 1.f, false);
         break;
     case W_D:
-        Render::getInstance()->drawAnimation(anim_WD, Rvect(x*15+8, (y*15+8)-delay), 0.f, 1.f, false);
+        Render::getInstance()->drawAnimation(anim_WD, Rvect(x*16+8, (y*16+8)-delay), 0.f, 1.f, false);
         break;
     case W_U:
-        Render::getInstance()->drawAnimation(anim_WU, Rvect(x*15+8, (y*15+8)+delay), 0.f, 1.f, false);
+        Render::getInstance()->drawAnimation(anim_WU, Rvect(x*16+8, (y*16+8)+delay), 0.f, 1.f, false);
         break;
     case W_L:
-        Render::getInstance()->drawAnimation(anim_WL, Rvect((x*15+8)+ delay, y*15+8), 0.f, 1.f, false);
+        Render::getInstance()->drawAnimation(anim_WL, Rvect((x*16+8)+ delay, y*16+8), 0.f, 1.f, false);
         break;
     case W_R:
-        Render::getInstance()->drawAnimation(anim_WR, Rvect((x*15+8) - delay, y*15+8), 0.f, 1.f, false);
+        Render::getInstance()->drawAnimation(anim_WR, Rvect((x*16+8) - delay, y*16+8), 0.f, 1.f, false);
         break;
     
     default:

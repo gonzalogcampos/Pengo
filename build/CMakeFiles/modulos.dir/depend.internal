@@ -13,6 +13,8 @@ CMakeFiles/modulos.dir/src/Game.cpp.o
  /home/usuario/Documentos/Pengo/src/Game.h
 CMakeFiles/modulos.dir/src/GameObject/Ice.cpp.o
  ../src/GameObject/GameObject.h
+ ../src/Map.h
+ ../src/Render/Render.h
  /home/usuario/Documentos/Pengo/src/GameObject/Ice.cpp
  /home/usuario/Documentos/Pengo/src/GameObject/Ice.h
 CMakeFiles/modulos.dir/src/GameObject/Pengo.cpp.o

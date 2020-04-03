@@ -3,6 +3,8 @@
 
 class Ice : public GameObject
 {
+    private:
+        unsigned int sprite;
     public:  
         Ice(int x, int y);
 
