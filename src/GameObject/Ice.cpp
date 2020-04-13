@@ -4,7 +4,8 @@
 
 
 const float VELOCITY = .2f;
-const float TIMEDYING = .15f;
+const float TIMEDYING = .5f;
+const float TIMEEGGVIEW = 1.f;
 
 Ice::Ice(int x, int y) : GameObject(x, y)
 {
@@ -76,6 +77,9 @@ void Ice::update(float dt)
             case DYING:
                 hasToDie = true;
                 break;
+            case EGGVIEW:
+                state = STATIC;
+                break;
         }
     }
 }
@@ -104,6 +108,9 @@ void Ice::draw()
             break;
         case DYING:
             Render::getInstance()->drawAnimation(dyingAnimation, Rvect((x*16+8), (y*16+8)), 0.f, 1.f, false);
+            break;
+        case EGGVIEW:
+            Render::getInstance()->drawAnimation(eggViewAnimation, Rvect((x*16+8), (y*16+8)), 0.f, 1.f, false);
             break;
     }
     
@@ -144,12 +151,41 @@ void Ice::hits(int dir)
 
 void Ice::dies()
 {
-    state = DYING;
-    state_Time = 0.f;
-    state_Duration = TIMEDYING;
+    if(state != DYING)
+    {
+        state = DYING;
+        state_Time = 0.f;
+        state_Duration = TIMEDYING;
+    }
 }
 
 bool Ice::getHasToDie()
 {
     return this->hasToDie;
+}
+
+
+
+bool Ice::isEgg()
+{
+    return egg;
+}
+
+void Ice::setEgg()
+{
+    Render* r = Render::getInstance();
+    eggViewAnimation = r->createAnimation(4);
+    r->addFrameToAnimation(eggViewAnimation, r->createSprite("res/T2.png", Rrect(708, 65, 16, 16)));
+    r->addFrameToAnimation(eggViewAnimation, r->createSprite("res/T2.png", Rrect(708,  0, 16, 16)));
+
+    r->deleteAnimation(dyingAnimation);
+    dyingAnimation = r->createAnimation(8);
+    r->addFrameToAnimation(eggViewAnimation, r->createSprite("res/T2.png", Rrect(708, 65, 16, 16)));
+    r->addFrameToAnimation(eggViewAnimation, r->createSprite("res/T2.png", Rrect(708, 65+16, 16, 16)));
+    r->addFrameToAnimation(eggViewAnimation, r->createSprite("res/T2.png", Rrect(708+16, 65+16, 16, 16)));
+    r->addFrameToAnimation(eggViewAnimation, r->createSprite("res/T2.png", Rrect(708+16*2, 65+16, 16, 16)));
+
+    state = EGGVIEW;
+    state_Duration = TIMEEGGVIEW;
+    egg = true;
 }

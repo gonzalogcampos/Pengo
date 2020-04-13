@@ -41,6 +41,7 @@ class Map
         Pengo* createPengo(int x, int y);
         Ice* createIce(int x, int y);
         SnoBee* createSnobee(int x, int y);
+        Ice* createEgg(int x, int y);
         void update(float dt);
         bool pengoMoving(GameObject* pengo, int dir);
         void pengoHits(int x, int y, int dir);

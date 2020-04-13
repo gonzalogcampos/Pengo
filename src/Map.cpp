@@ -159,6 +159,18 @@ Ice* Map::createIce(int x,int y)
     return nullptr;
 }
 
+Ice* Map::createEgg(int x, int y)
+{
+    if(map[x] !=nullptr && map[x][y] == nullptr)
+    {
+        Ice* ice = new Ice(x, y);
+        ice->setEgg();
+        map[x][y] = ice;
+        return (Ice*)map[x][y];
+    }
+    return nullptr;
+}
+
 /*
 Creates a Sno-Bee in the xy position, then returns the pengo. Returns null if there is something in xy
 */
@@ -168,6 +180,7 @@ SnoBee* Map::createSnobee(int x,int y)
     {
         
         map[x][y] = new SnoBee(x, y);
+        snoBeesCount++;
         return (SnoBee*)map[x][y];
     }
     return nullptr;
@@ -182,12 +195,14 @@ void Map::update(float dt)
     {
         clear();
         Game::getInstance()->setState(IGameState::INTRO);
+        return;
     }
 
     if(pengo==nullptr)
     {
         clear();
         Game::getInstance()->setState(IGameState::INTRO);
+        return;
     }
     for(int x = 0; x<MAP_W; x++)
     {
@@ -221,8 +236,8 @@ void Map::init()
     spriteBack = Render::getInstance()->createSprite("res/T2.png", Rrect(0, 0, 223, 255) );
 
     createPengo(0, 0);
-    createIce(1,0);
-    createIce(1,1);
+    createEgg(1,0);
+    createEgg(1,1);
     createIce(1,2);
     createIce(1,3);
     createIce(1,4);
@@ -300,12 +315,11 @@ void Map::init()
     createIce(11,14);
 
     createSnobee(4, 6);
-    createSnobee(7, 4);
-    createSnobee(9, 5);
-    createSnobee(12, 10);
-    createSnobee(2, 9);
+    //createSnobee(7, 4);
+    //createSnobee(9, 5);
+    //createSnobee(12, 10);
+    //createSnobee(2, 9);
 
-    snoBeesCount = 5;
     
 
 
