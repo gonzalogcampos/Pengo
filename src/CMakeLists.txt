@@ -12,6 +12,7 @@ target_sources(modulos PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/GameObject/SnoBee.cpp"
 
     "${CMAKE_CURRENT_SOURCE_DIR}/GameState/PlayState.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/GameState/IntroState.cpp"
 
     "${CMAKE_CURRENT_SOURCE_DIR}/Render/Render.cpp"
     

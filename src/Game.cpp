@@ -2,7 +2,7 @@
 #include "Clock.h"
 #include "Render.h"
 #include "PlayState.h"
-
+#include <IntroState.h>
 
 
 void Game::setState(IGameState::stateType type)
@@ -12,6 +12,9 @@ void Game::setState(IGameState::stateType type)
         case IGameState::stateType::PLAY:
             state = PlayState::getInstance();
             break;
+        case IGameState::stateType::INTRO:
+            state = IntroState::getInstance();
+            break;
     }
     state->initState();
 }
@@ -19,7 +22,7 @@ void Game::setState(IGameState::stateType type)
 
 void Game::run()
 {
-    setState(IGameState::stateType::PLAY);
+    setState(IGameState::stateType::INTRO);
 
 
     Clock clock;

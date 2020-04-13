@@ -1,6 +1,0 @@
-/home/usuario/Documentos/Pengo/build/CMakeFiles/edit_cache.dir
-/home/usuario/Documentos/Pengo/build/CMakeFiles/rebuild_cache.dir
-/home/usuario/Documentos/Pengo/build/CMakeFiles/Pengo.dir
-/home/usuario/Documentos/Pengo/build/CMakeFiles/modulos.dir
-/home/usuario/Documentos/Pengo/build/src/CMakeFiles/edit_cache.dir
-/home/usuario/Documentos/Pengo/build/src/CMakeFiles/rebuild_cache.dir

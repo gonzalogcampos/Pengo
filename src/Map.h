@@ -16,7 +16,7 @@ class Map
         Map();
         ~Map();
 
-
+        int snoBeesCount = 0;
         unsigned int spriteBack;
     
     public:
@@ -43,7 +43,7 @@ class Map
         SnoBee* createSnobee(int x, int y);
         void update(float dt);
         bool pengoMoving(GameObject* pengo, int dir);
-        void hits(int x, int y, int dir);
+        void pengoHits(int x, int y, int dir);
         bool iceMoving(GameObject* ice, int dir);
         bool snobeeMoving(GameObject* snobee, int dir);
 

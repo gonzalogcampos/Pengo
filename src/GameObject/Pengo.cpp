@@ -51,16 +51,16 @@ void Pengo::update(float dt)
             switch (state)
             {
             case S_D:
-                Map::getInstance()->hits(x, y+1, 2);
+                Map::getInstance()->pengoHits(x, y+1, 2);
                 break;
             case S_U:
-                Map::getInstance()->hits(x, y-1, 0);
+                Map::getInstance()->pengoHits(x, y-1, 0);
                 break;
             case S_L:
-                Map::getInstance()->hits(x-1, y, 3);
+                Map::getInstance()->pengoHits(x-1, y, 3);
                 break;
             case S_R:
-                Map::getInstance()->hits(x+1, y, 1);
+                Map::getInstance()->pengoHits(x+1, y, 1);
                 break;
             
             default:

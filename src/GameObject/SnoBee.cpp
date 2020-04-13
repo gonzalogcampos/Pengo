@@ -90,32 +90,41 @@ void SnoBee::update(float dt)
         if(!hasContinue)
         {
             int dir;
-            do
+            if((Map::getInstance()->getGameobject(x-1, y) != nullptr || (x-1)<0) &&
+                (Map::getInstance()->getGameobject(x+1, y) != nullptr || (x+1)>=MAP_W) &&
+                (Map::getInstance()->getGameobject(x, y-1) != nullptr || (y-1)<0) &&
+                (Map::getInstance()->getGameobject(x, y+1) != nullptr || (y+1)>=MAP_H))
             {
-                dir = rand()%4;
-            } while (!Map::getInstance()->snobeeMoving(this, dir));
-            switch (dir)
-            {
-                case 2:
-                    y++;
-                    state = W_D;
-                    walking_Time = 0.f;
-                    break;
-                case 0:
-                    y--;
-                    state = W_U;
-                    walking_Time = 0.f;
-                    break;        
-                case 3:
-                    x--;
-                    state = W_L;
-                    walking_Time = 0.f;
-                    break;
-                case 1:
-                    x++;
-                    state = W_R;
-                    walking_Time = 0.f;
-                    break;
+                //NO SE PUEDE MOVER
+            }else{
+                do
+                {
+                    dir = rand()%4;
+                } while (!Map::getInstance()->snobeeMoving(this, dir));
+                switch (dir)
+                {
+                    case 2:
+                        y++;
+                        state = W_D;
+                        walking_Time = 0.f;
+                        break;
+                    case 0:
+                        y--;
+                        state = W_U;
+                        walking_Time = 0.f;
+                        break;        
+                    case 3:
+                        x--;
+                        state = W_L;
+                        walking_Time = 0.f;
+                        break;
+                    case 1:
+                        x++;
+                        state = W_R;
+                        walking_Time = 0.f;
+                        break;
+                }
+
             }
             
         }

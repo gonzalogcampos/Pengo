@@ -5,8 +5,7 @@
 #include "SnoBee.h"
 #include "Ice.h"
 #include "Render.h"
-#include <iostream>
-
+#include <Game.h>
 /*
 Initialize all the values
 */
@@ -179,11 +178,35 @@ Calls the update(float dt) function of all the Game Objects in the map
 */
 void Map::update(float dt)
 {    
+    if(snoBeesCount <= 0)
+    {
+        clear();
+        Game::getInstance()->setState(IGameState::INTRO);
+    }
+
+    if(pengo==nullptr)
+    {
+        clear();
+        Game::getInstance()->setState(IGameState::INTRO);
+    }
     for(int x = 0; x<MAP_W; x++)
+    {
         for(int y = 0; y<MAP_H; y++)
+        {
             if(map[x]!=nullptr && map[x][y]!=nullptr)
+            {
                 map[x][y]->noUpdate();
-    
+
+                if(Ice* ice = dynamic_cast<Ice*>(map[x][y]))
+                {
+                    if(ice->getHasToDie())
+                    {
+                        push(x, y);
+                    }
+                }
+            }
+        }
+    }
 
     
     for(int x = 0; x<MAP_W; x++)
@@ -281,6 +304,8 @@ void Map::init()
     createSnobee(9, 5);
     createSnobee(12, 10);
     createSnobee(2, 9);
+
+    snoBeesCount = 5;
     
 
 
@@ -328,15 +353,22 @@ bool Map::pengoMoving(GameObject* pengo, int dir)
 
     if(dx>=0 && dx<MAP_W && dy>=0 && dy<MAP_H && map[dx][dy]==nullptr)
     {
+        if(map[dx][dy] == nullptr)
+        {
         map[dx][dy] = map[x][y];
         map[x][y] = nullptr;
         return true;
+        }else if(SnoBee* snobee = dynamic_cast<SnoBee*>(map[dx][dy]))
+        {
+            delete pengo;
+            pengo = nullptr;
+        }
     }
     return false;
 }
 
 
-void Map::hits(int x,int y, int dir)
+void Map::pengoHits(int x,int y, int dir)
 {
     if(x<0 || x>=MAP_W || y<0 || y>=MAP_H)
         return;
@@ -368,9 +400,16 @@ void Map::hits(int x,int y, int dir)
             ice->hits(dir);
             map[dx][dy] = map[x][y];
             map[x][y] = nullptr;
-        }else
+        }else if(SnoBee* snobee = dynamic_cast<SnoBee*>(map[dx][dy]))
         {
-            push(x, y);
+            push(dx, dy);
+            ice->hits(dir);
+            map[dx][dy] = map[x][y];
+            map[x][y] = nullptr;
+        }
+        else
+        {
+            ice->dies();
         }
     }
 }
@@ -417,6 +456,13 @@ bool Map::iceMoving(GameObject* ice, int dir)
     {
         map[dx][dy] = map[x][y];
         map[x][y] = nullptr;
+        return true;
+    }else if(SnoBee* snobee = dynamic_cast<SnoBee*>(map[dx][dy]))
+    {
+        map[dx][dy] = map[x][y];
+        map[x][y] = nullptr;
+        push(dx, dy);
+        snoBeesCount--;
         return true;
     }
     return false;
@@ -471,6 +517,7 @@ bool Map::snobeeMoving(GameObject* snobee, int  dir)
         if(map[dx][dy]==pengo)
         {
             delete pengo;
+            pengo = nullptr;
             map[dx][dy]=map[x][y];
             map[x][y]=nullptr;
             return true;
