@@ -27,6 +27,9 @@ if (SFML_FOUND)
     target_link_libraries(Pengo ${SFML_LIBRARIES})
 endif()
 
+set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE RelWithDebInfo)
+
 
 set(dir ${CMAKE_CURRENT_SOURCE_DIR}/bin/)
 set(EXECUTABLE_OUTPUT_PATH ${dir} CACHE PATH "Build directory" FORCE)

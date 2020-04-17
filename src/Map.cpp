@@ -34,8 +34,10 @@ void Map::clear()
         {
             if(map[x]!=nullptr && map[y]!=nullptr)
                 delete map[x][y];
+                map[x][y] = nullptr;
         }
     }
+    pengo = nullptr;
 }
 
 /*
@@ -65,13 +67,16 @@ Calls the draw() function of all the Game Objects in the map
 void Map::draw()
 {
     Render::getInstance()->drawSprite(spriteBack, Rvect(0,0), 0.f, 1.f, false);
-    for(int x=0; x<MAP_W; x++)
+    for(size_t x=0; x<MAP_W; x++)
     {
-        for(int y=0; y<MAP_H; y++)
+        if(map[x])
         {
-            if(map[x][y]!=nullptr)
+            for(size_t y=0; y<MAP_H; y++)
             {
-                map[x][y]->draw();
+                if(map[x][y])
+                {
+                    map[x][y]->draw();
+                }
             }
         }
     }
@@ -409,20 +414,23 @@ void Map::pengoHits(int x,int y, int dir)
             break;
         }
 
-        if(dx>=0 && dx<MAP_W && dy>=0 && dy<MAP_H && map[dx][dy]==nullptr)
+        if(dx>=0 && dx<MAP_W && dy>=0 && dy<MAP_H)
         {
-            ice->hits(dir);
-            map[dx][dy] = map[x][y];
-            map[x][y] = nullptr;
-        }else if(SnoBee* snobee = dynamic_cast<SnoBee*>(map[dx][dy]))
-        {
-            push(dx, dy);
-            ice->hits(dir);
-            map[dx][dy] = map[x][y];
-            map[x][y] = nullptr;
-        }
-        else
-        {
+            if(map[dx][dy]==nullptr)
+            {
+                ice->hits(dir);
+                map[dx][dy] = map[x][y];
+                map[x][y] = nullptr;
+            }else if(SnoBee* snobee = dynamic_cast<SnoBee*>(map[dx][dy]))
+            {
+                push(dx, dy);
+                ice->hits(dir);
+                map[dx][dy] = map[x][y];
+                map[x][y] = nullptr;
+            }else{
+                ice->dies();
+            }
+        }else{
             ice->dies();
         }
     }
@@ -466,18 +474,21 @@ bool Map::iceMoving(GameObject* ice, int dir)
         break;
     }
 
-    if(dx>=0 && dx<MAP_W && dy>=0 && dy<MAP_H && map[dx][dy]==nullptr)
+    if(dx>=0 && dx<MAP_W && dy>=0 && dy<MAP_H)
     {
-        map[dx][dy] = map[x][y];
-        map[x][y] = nullptr;
-        return true;
-    }else if(SnoBee* snobee = dynamic_cast<SnoBee*>(map[dx][dy]))
-    {
-        map[dx][dy] = map[x][y];
-        map[x][y] = nullptr;
-        push(dx, dy);
-        snoBeesCount--;
-        return true;
+        if(map[dx][dy]==nullptr)
+        {
+            map[dx][dy] = map[x][y];
+            map[x][y] = nullptr;
+            return true;
+        }else if(SnoBee* snobee = dynamic_cast<SnoBee*>(map[dx][dy]))
+        {  
+            map[dx][dy] = map[x][y];
+            map[x][y] = nullptr;
+            push(dx, dy);
+            snoBeesCount--;
+            return true;
+        }
     }
     return false;
 }
