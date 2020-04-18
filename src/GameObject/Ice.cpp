@@ -5,8 +5,8 @@
 
 const float VELOCITY = .2f;
 const float TIMEDYING = .5f;
-const float TIMEEGGVIEW = 5.f;
-const float TIMEEGGBREAKING = .5f;
+const float TIMEEGGVIEW = 10.f;
+const float TIMEEGGBREAKING = 1.f;
 
 Ice::Ice(int x, int y) : GameObject(x, y)
 {

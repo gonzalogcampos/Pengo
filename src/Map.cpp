@@ -1,5 +1,4 @@
 #include "Map.h"
-#include <iostream>
 #include "GameObject.h"
 #include "Pengo.h"
 #include "SnoBee.h"
@@ -67,8 +66,15 @@ Calls the draw() function of all the Game Objects in the map
 */
 void Map::draw()
 {
-    Render::getInstance()->drawSprite(spriteBack, Rvect(0,40), 0.f, 1.f, false);
-    Render::getInstance()->drawSprite(spritePengo, Rvect(111,20), 0.f, .5f, true);
+    Render::getInstance()->drawSprite(spriteBack, Rvect(0, 40), 0.f, 1.f, false);
+    Render::getInstance()->drawSprite(spritePengo, Rvect(111, 20), 0.f, .5f, true);
+    Render::getInstance()->drawSprite(spriteLevel, Rvect(160, 29), 0.f, 1.f, false);
+    Render::getInstance()->drawSprite(spriteNums[level], Rvect(200, 29), 0.f, 1.f, false);
+
+    int l = pengo->getLifes();
+    for(int i=0; i<l; i++)
+        Render::getInstance()->drawSprite(spriteLife, Rvect(20*(i+1)-10, 30));
+
     for(size_t x=0; x<MAP_W; x++)
     {
         if(map[x])
@@ -241,7 +247,15 @@ void Map::init()
 {
     spriteBack = Render::getInstance()->createSprite("res/T2.png", Rrect(0, 0, 223, 255) );
     spritePengo = Render::getInstance()->createSprite("res/T1.png",  Rrect(0, 8, 143, 64));
-    loadNextLevel();
+    spriteLife = Render::getInstance()->createSprite("res/T1.png", Rrect(0, 150, 16, 16));
+    spriteLoadingB = Render::getInstance()->createSprite("res/T5.png");
+    spriteLoading = Render::getInstance()->createSprite("res/T1.png", Rrect(7, 175, 130, 13));
+    spriteLevel = Render::getInstance()->createSprite("res/T1.png", Rrect(68, 179, 37, 10));
+
+    for(int i = 0; i<10; i++)
+        spriteNums[i] = Render::getInstance()->createSprite("res/T1.png", Rrect(0 + i*9, 229, 8, 8));
+
+    loadNextLevel(); 
 }
 
 bool Map::pengoMoving(GameObject* pengo, int dir)
@@ -335,6 +349,7 @@ void Map::pengoHits(int x,int y, int dir)
             }else if(SnoBee* snobee = dynamic_cast<SnoBee*>(map[dx][dy]))
             {
                 push(dx, dy);
+                snoBeesCount--;
                 ice->hits(dir);
                 map[dx][dy] = map[x][y];
                 map[x][y] = nullptr;
@@ -382,7 +397,7 @@ bool Map::iceMoving(GameObject* ice, int dir)
         dx--;
         break;
     default:
-        break;
+            break;
     }
 
     if(dx>=0 && dx<MAP_W && dy>=0 && dy<MAP_H)
@@ -412,6 +427,7 @@ bool Map::snobeeMoving(GameObject* snobee, int  dir)
         return false;
     
     int x = -1;
+
     int y = -1;
     for(int i = 0; i<MAP_W; i++)
     {
@@ -524,7 +540,11 @@ void Map::events()
 void Map::loadNextLevel()
 {
     clear();
+    snoBeesCount = 0;
     level++;
+    Render::getInstance()->drawSprite(spriteLoadingB, Rvect(0, 0), 0.f, 1.f, false);
+    Render::getInstance()->drawSprite(spriteLoading, Rvect(111, 100));
+    Render::getInstance()->postLoop();
     switch (level)
     {
     case 1:
@@ -532,6 +552,9 @@ void Map::loadNextLevel()
         break;
     case 2:
         loadLevel2();
+        break;
+    case 3:
+        loadLevelRandom();
         break;
     default:
         level = 0;
@@ -542,48 +565,51 @@ void Map::loadNextLevel()
 
 void Map::loadLevel1()
 {
-    createPengo(0, 0);
-    createEgg(1,0);
-    createEgg(1,1);
+    createPengo(7, 6);
+    createIce(0,7);
+    createIce(1,1);
     createIce(1,2);
     createIce(1,3);
     createIce(1,4);
     createIce(1,6);
     createIce(1,7);
-    createIce(1,8);
     createIce(1,9);
+    createIce(1,10);
     createIce(1,11);
-    createIce(1,12);
     createIce(1,13);
     createIce(1,14);
-    createIce(2,3);
-    createIce(2,7);
+    createIce(2,5);
+    createIce(2,9);
+    createIce(2,13);
+    createIce(3,0);
     createIce(3,1);
-    createIce(3,7);
-    createIce(3,8);
+    createIce(3,2);
+    createIce(3,3);
+    createIce(3,5);
+    createIce(3,6);
     createIce(3,9);
-    createIce(3,10);
     createIce(3,11);
     createIce(3,12);
-    createIce(3,13);
-    createIce(4,1);
     createIce(4,3);
-    createIce(4,5);
+    createIce(4,9);
     createIce(4,11);
-    createIce(5,0);
     createIce(5,1);
-    createIce(5,3);
+    createIce(5,2);
+    createIce(5,4);
     createIce(5,5);
+    createIce(5,6);
     createIce(5,7);
     createIce(5,8);
     createIce(5,9);
     createIce(5,11);
     createIce(5,13);
-    createIce(6,3);
-    createIce(6,5);
+    createIce(6,8);
+    createIce(6,13);
+    createIce(7,0);
     createIce(7,1);
     createIce(7,2);
     createIce(7,3);
+    createIce(7,4);
     createIce(7,5);
     createIce(7,7);
     createIce(7,9);
@@ -591,41 +617,38 @@ void Map::loadLevel1()
     createIce(7,11);
     createIce(7,12);
     createIce(7,13);
-    createIce(8,1);
     createIce(8,5);
-    createIce(8,9);
+    createIce(8,7);
     createIce(8,13);
+    createIce(9,0);
     createIce(9,1);
     createIce(9,3);
-    createIce(9,4);
-    createIce(9,6);
+    createIce(9,5);
     createIce(9,7);
     createIce(9,8);
     createIce(9,9);
     createIce(9,11);
     createIce(9,13);
     createIce(10,3);
+    createIce(10,5);
+    createIce(10,7);
     createIce(10,11);
     createIce(11,0);
     createIce(11,1);
-    createIce(11,2);
     createIce(11,3);
     createIce(11,4);
     createIce(11,5);
-    createIce(11,6);
     createIce(11,7);
     createIce(11,9);
     createIce(11,10);
     createIce(11,11);
     createIce(11,12);
     createIce(11,13);
-    createIce(11,14);
-
-    createSnobee(4, 6);
-    //createSnobee(7, 4);
-    //createSnobee(9, 5);
-    //createSnobee(12, 10);
-    //createSnobee(2, 9);
+    createIce(12,17);
+    createSnobee(3, 7);
+    createSnobee(3, 13);
+    createSnobee(5, 3);
+    createSnobee(7, 5);
 
     
 }
@@ -633,8 +656,8 @@ void Map::loadLevel1()
 void Map::loadLevel2()
 {
     createPengo(0, 0);
-    createEgg(1,0);
-    createEgg(1,1);
+    createIce(1,0);
+    createIce(1,1);
     createIce(1,2);
     createIce(1,3);
     createIce(1,4);
@@ -642,7 +665,7 @@ void Map::loadLevel2()
     createIce(1,7);
     createIce(1,8);
     createIce(1,9);
-    createIce(1,11);
+    createEgg(1,11);
     createIce(1,12);
     createIce(1,13);
     createIce(1,14);
@@ -676,7 +699,7 @@ void Map::loadLevel2()
     createIce(7,3);
     createIce(7,5);
     createIce(7,7);
-    createIce(7,9);
+    createEgg(7,9);
     createIce(7,10);
     createIce(7,11);
     createIce(7,12);
@@ -690,7 +713,7 @@ void Map::loadLevel2()
     createIce(9,4);
     createIce(9,6);
     createIce(9,7);
-    createIce(9,8);
+    createEgg(9,8);
     createIce(9,9);
     createIce(9,11);
     createIce(9,13);
@@ -704,13 +727,12 @@ void Map::loadLevel2()
     createIce(11,5);
     createIce(11,6);
     createIce(11,7);
-    createIce(11,9);
+    createEgg(11,9);
     createIce(11,10);
     createIce(11,11);
     createIce(11,12);
     createIce(11,13);
     createIce(11,14);
-
     createSnobee(4, 6);
     createSnobee(7, 4);
     createSnobee(9, 5);
@@ -718,6 +740,30 @@ void Map::loadLevel2()
     createSnobee(2, 9);
 
     
+}
+
+void Map::loadLevelRandom()
+{
+    int x = rand()%MAP_W;
+    int y = rand()%MAP_H;
+    pengo = createPengo(x, y);
+    for(int i = 0; i<MAP_W; i++)
+    {
+        for(int j = 0; j<MAP_H; j++)
+        {
+            if(i!=x && j!=y)
+            {
+            int r = rand()%100;
+            if(r<5)
+                createSnobee(i, j);
+            else if(r<10)
+                createEgg(i, j);
+            else if(r<50)
+                createIce(i, j);
+            }
+        }
+    }
+
 }
 
 void Map::breakEgg()
@@ -729,3 +775,4 @@ void Map::breakEgg()
                     if(ice->breakEgg())
                         return;
 }
+

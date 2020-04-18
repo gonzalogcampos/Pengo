@@ -18,7 +18,8 @@ class Map
 
         int snoBeesCount = 0;
         int level = 0;
-        unsigned int spriteBack, spritePengo, spriteLife;
+        unsigned int spriteBack, spritePengo, spriteLife, spriteLoadingB, spriteLoading, spriteLevel;
+        unsigned int spriteNums[10];
         bool modoDios = false;
     public:
         /*
@@ -51,6 +52,7 @@ class Map
         void loadNextLevel();
         void loadLevel1();
         void loadLevel2();
+        void loadLevelRandom();
         bool hitPengo();
         void events();
         void breakEgg();
