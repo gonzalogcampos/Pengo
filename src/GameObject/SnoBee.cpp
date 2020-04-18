@@ -1,6 +1,6 @@
-#include "SnoBee.h"
-#include "Render.h"
-#include "Map.h"
+#include <SnoBee.h>
+#include <Render.h>
+#include <Map.h>
 
 const float VELOCITY = .3f;
 const float TIMESTUNNED = 5.f;

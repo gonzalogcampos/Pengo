@@ -1,10 +1,11 @@
 #pragma once
-#include "IGameState.h"
+#include <IGameState.h>
 
 class IntroState : public IGameState 
 {
     private:
-        unsigned int pengo, sega;
+        unsigned int pengo, sega, info;
+        float time = 0.f;
         IntroState(){}         
     public:
 

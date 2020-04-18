@@ -1,5 +1,4 @@
 #include <Render.h>
-#include <iostream> 
 
 /*
 Destructor que llama a  la  funcion close de Render.

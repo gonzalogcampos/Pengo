@@ -1,9 +1,9 @@
-#include "Map.h"
-#include "GameObject.h"
-#include "Pengo.h"
-#include "SnoBee.h"
-#include "Ice.h"
-#include "Render.h"
+#include <Map.h>
+#include <GameObject.h>
+#include <Pengo.h>
+#include <SnoBee.h>
+#include <Ice.h>
+#include <Render.h>
 #include <Game.h>
 
 /*

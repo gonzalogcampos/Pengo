@@ -1,7 +1,7 @@
-#include "Pengo.h"
-#include "Console.h"
-#include "Map.h"
-#include "Render.h"
+#include <Pengo.h>
+#include <Console.h>
+#include <Map.h>
+#include <Render.h>
 
 const float VELOCITY = .3f;
 

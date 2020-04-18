@@ -1,5 +1,5 @@
-#include "PlayState.h"
-#include "Map.h"
+#include <PlayState.h>
+#include <Map.h>
 
 void PlayState::initState()
 {

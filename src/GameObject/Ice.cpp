@@ -1,6 +1,6 @@
-#include "Ice.h"
-#include "Map.h"
-#include "Render.h"
+#include <Ice.h>
+#include <Map.h>
+#include <Render.h>
 
 
 const float VELOCITY = .2f;

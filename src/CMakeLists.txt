@@ -1,10 +1,3 @@
-#------------------- NOTA DE GONZALO -----------------------
-#    De momento como no tenemos mucho codigo podemos
-# compilar todos los .cpp en un unico binario (modulos.a)
-# pero supongo que lo suyo seria crear varios binarios segun
-# grupos para agilizar la compilacion.
-
-
 #Especificar donde se encuentran los ficheros cpp a compilar
 target_sources(modulos PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/GameObject/Ice.cpp"

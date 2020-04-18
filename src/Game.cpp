@@ -1,7 +1,7 @@
-#include "Game.h"
-#include "Clock.h"
-#include "Render.h"
-#include "PlayState.h"
+#include <Game.h>
+#include <Clock.h>
+#include <Render.h>
+#include <PlayState.h>
 #include <IntroState.h>
 
 
