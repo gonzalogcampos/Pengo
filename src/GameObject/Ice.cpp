@@ -5,7 +5,8 @@
 
 const float VELOCITY = .2f;
 const float TIMEDYING = .5f;
-const float TIMEEGGVIEW = 1.f;
+const float TIMEEGGVIEW = 5.f;
+const float TIMEEGGBREAKING = .5f;
 
 Ice::Ice(int x, int y) : GameObject(x, y)
 {
@@ -24,6 +25,13 @@ Ice::Ice(int x, int y) : GameObject(x, y)
     Render::getInstance()->addFrameToAnimation(dyingAnimation, Render::getInstance()->createSprite("res/T2.png", Rrect(708 + 16*8, 48, 16, 16)));
 }
 
+
+Ice::~Ice()
+{
+    Render* r = Render::getInstance();
+    r->deleteAnimation(dyingAnimation);
+    r->deleteAnimation(eggViewAnimation);
+}
 void Ice::update(float dt)
 {
     if(this->wasUpdate)
@@ -80,6 +88,9 @@ void Ice::update(float dt)
             case EGGVIEW:
                 state = STATIC;
                 break;
+            case BREAKING:
+                brokenEgg = true;
+                break;
         }
     }
 }
@@ -92,25 +103,28 @@ void Ice::draw()
     switch (state)
     {
         case STATIC:
-            Render::getInstance()->drawSprite(sprite, Rvect((16*x)+8, (16*y)+8), 0.f, 1.f, false);
+            Render::getInstance()->drawSprite(sprite, Rvect((16*x)+8, (16*y)+48), 0.f, 1.f, false);
             break;
         case DOWN:
-            Render::getInstance()->drawSprite(sprite, Rvect(x*16+8, (y*16+8)-delay), 0.f, 1.f, false);
+            Render::getInstance()->drawSprite(sprite, Rvect(x*16+8, (y*16+48)-delay), 0.f, 1.f, false);
             break;
         case UP:
-            Render::getInstance()->drawSprite(sprite, Rvect(x*16+8, (y*16+8)+delay), 0.f, 1.f, false);
+            Render::getInstance()->drawSprite(sprite, Rvect(x*16+8, (y*16+48)+delay), 0.f, 1.f, false);
             break;
         case LEFT:
-            Render::getInstance()->drawSprite(sprite, Rvect((x*16+8)+ delay, y*16+8), 0.f, 1.f, false);
+            Render::getInstance()->drawSprite(sprite, Rvect((x*16+8)+ delay, y*16+48), 0.f, 1.f, false);
             break;
         case RIGHT:
-            Render::getInstance()->drawSprite(sprite, Rvect((x*16+8) - delay, y*16+8), 0.f, 1.f, false);
+            Render::getInstance()->drawSprite(sprite, Rvect((x*16+8) - delay, y*16+48), 0.f, 1.f, false);
             break;
         case DYING:
-            Render::getInstance()->drawAnimation(dyingAnimation, Rvect((x*16+8), (y*16+8)), 0.f, 1.f, false);
+            Render::getInstance()->drawAnimation(dyingAnimation, Rvect((x*16+8), (y*16+48)), 0.f, 1.f, false);
             break;
         case EGGVIEW:
-            Render::getInstance()->drawAnimation(eggViewAnimation, Rvect((x*16+8), (y*16+8)), 0.f, 1.f, false);
+            Render::getInstance()->drawAnimation(eggViewAnimation, Rvect((x*16+8), (y*16+48)), 0.f, 1.f, false);
+            break;
+        case BREAKING:
+            Render::getInstance()->drawAnimation(dyingAnimation, Rvect((x*16+8), (y*16+48)), 0.f, 1.f, false);
             break;
     }
     
@@ -174,18 +188,36 @@ bool Ice::isEgg()
 void Ice::setEgg()
 {
     Render* r = Render::getInstance();
+
+    r->deleteAnimation(dyingAnimation);
+    dyingAnimation = r->createAnimation(8);
+    r->addFrameToAnimation(dyingAnimation, r->createSprite("res/T2.png", Rrect(708, 65, 16, 16)));
+    r->addFrameToAnimation(dyingAnimation, r->createSprite("res/T2.png", Rrect(708, 65+16, 16, 16)));
+    r->addFrameToAnimation(dyingAnimation, r->createSprite("res/T2.png", Rrect(708+16, 65+16, 16, 16)));
+    r->addFrameToAnimation(dyingAnimation, r->createSprite("res/T2.png", Rrect(708+16*2, 65+16, 16, 16)));
+
     eggViewAnimation = r->createAnimation(4);
     r->addFrameToAnimation(eggViewAnimation, r->createSprite("res/T2.png", Rrect(708, 65, 16, 16)));
     r->addFrameToAnimation(eggViewAnimation, r->createSprite("res/T2.png", Rrect(708,  0, 16, 16)));
 
-    r->deleteAnimation(dyingAnimation);
-    dyingAnimation = r->createAnimation(8);
-    r->addFrameToAnimation(eggViewAnimation, r->createSprite("res/T2.png", Rrect(708, 65, 16, 16)));
-    r->addFrameToAnimation(eggViewAnimation, r->createSprite("res/T2.png", Rrect(708, 65+16, 16, 16)));
-    r->addFrameToAnimation(eggViewAnimation, r->createSprite("res/T2.png", Rrect(708+16, 65+16, 16, 16)));
-    r->addFrameToAnimation(eggViewAnimation, r->createSprite("res/T2.png", Rrect(708+16*2, 65+16, 16, 16)));
-
     state = EGGVIEW;
     state_Duration = TIMEEGGVIEW;
     egg = true;
+}
+
+bool Ice::breakEgg()
+{
+    if(egg && state == STATIC)
+    {
+        state_Time = 0.f;
+        state_Duration = TIMEEGGBREAKING;
+        state = BREAKING;
+        return true;
+    }
+    return false;
+}
+
+bool Ice::isBroken()
+{
+    return brokenEgg;
 }

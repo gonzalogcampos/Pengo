@@ -18,6 +18,11 @@ class GameObject
         bool getKill(){return toKill;};
 
         void noUpdate(){this->wasUpdate = false;}
+
+        int getX(){return x;}
+        int getY(){return y;}
+        void setX(int x){this->x = x;}
+        void setY(int y){this->y = y;}
         
     protected:
         int x, y;

@@ -17,8 +17,9 @@ class Map
         ~Map();
 
         int snoBeesCount = 0;
-        unsigned int spriteBack;
-    
+        int level = 0;
+        unsigned int spriteBack, spritePengo, spriteLife;
+        bool modoDios = false;
     public:
         /*
         Singleton
@@ -47,7 +48,11 @@ class Map
         void pengoHits(int x, int y, int dir);
         bool iceMoving(GameObject* ice, int dir);
         bool snobeeMoving(GameObject* snobee, int dir);
-
-
-
+        void loadNextLevel();
+        void loadLevel1();
+        void loadLevel2();
+        bool hitPengo();
+        void events();
+        void breakEgg();
+        void eggBreaks();
 };

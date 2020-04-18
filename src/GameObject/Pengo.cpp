@@ -32,9 +32,16 @@ Pengo::Pengo(int x, int y) : GameObject(x, y)
     state= S_D;
 }
 
-Pengo::~Pengo()
-{
-
+Pengo::~Pengo(){
+    Render* r = Render::getInstance();
+    r->deleteAnimation(anim_SU);
+    r->deleteAnimation(anim_SD);
+    r->deleteAnimation(anim_SR);
+    r->deleteAnimation(anim_SL);
+    r->deleteAnimation(anim_WU);
+    r->deleteAnimation(anim_WD);
+    r->deleteAnimation(anim_WL);
+    r->deleteAnimation(anim_WR);
 }
 
 void Pengo::update(float dt)
@@ -146,31 +153,52 @@ void Pengo::draw()
     switch (state)
     {
     case S_D:
-        Render::getInstance()->drawAnimation(anim_SD, Rvect(x*16+8, y*16+8), 0.f, 1.f, false);
+        Render::getInstance()->drawAnimation(anim_SD, Rvect(x*16+8, y*16+48), 0.f, 1.f, false);
         break;
     case S_U:
-        Render::getInstance()->drawAnimation(anim_SU, Rvect(x*16+8, y*16+8), 0.f, 1.f, false);
+        Render::getInstance()->drawAnimation(anim_SU, Rvect(x*16+8, y*16+48), 0.f, 1.f, false);
         break;
     case S_L:
-        Render::getInstance()->drawAnimation(anim_SL, Rvect(x*16+8, y*16+8), 0.f, 1.f, false);
+        Render::getInstance()->drawAnimation(anim_SL, Rvect(x*16+8, y*16+48), 0.f, 1.f, false);
         break;
     case S_R:
-        Render::getInstance()->drawAnimation(anim_SR, Rvect(x*16+8, y*16+8), 0.f, 1.f, false);
+        Render::getInstance()->drawAnimation(anim_SR, Rvect(x*16+8, y*16+48), 0.f, 1.f, false);
         break;
     case W_D:
-        Render::getInstance()->drawAnimation(anim_WD, Rvect(x*16+8, (y*16+8)-delay), 0.f, 1.f, false);
+        Render::getInstance()->drawAnimation(anim_WD, Rvect(x*16+8, (y*16+48)-delay), 0.f, 1.f, false);
         break;
     case W_U:
-        Render::getInstance()->drawAnimation(anim_WU, Rvect(x*16+8, (y*16+8)+delay), 0.f, 1.f, false);
+        Render::getInstance()->drawAnimation(anim_WU, Rvect(x*16+8, (y*16+48)+delay), 0.f, 1.f, false);
         break;
     case W_L:
-        Render::getInstance()->drawAnimation(anim_WL, Rvect((x*16+8)+ delay, y*16+8), 0.f, 1.f, false);
+        Render::getInstance()->drawAnimation(anim_WL, Rvect((x*16+8)+ delay, y*16+48), 0.f, 1.f, false);
         break;
     case W_R:
-        Render::getInstance()->drawAnimation(anim_WR, Rvect((x*16+8) - delay, y*16+8), 0.f, 1.f, false);
+        Render::getInstance()->drawAnimation(anim_WR, Rvect((x*16+8) - delay, y*16+48), 0.f, 1.f, false);
         break;
     
     default:
         break;
     }
+}
+
+
+int Pengo::getLifes()
+{
+    return lifes;
+}
+
+bool Pengo::hit()
+{
+    lifes--;
+
+    if(lifes<0)
+        return false;
+    
+    return true;
+}
+
+void Pengo::setLifes(int l)
+{
+    lifes = l;
 }

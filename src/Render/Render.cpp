@@ -1,5 +1,5 @@
 #include <Render.h>
-#include <iostream>
+#include <iostream> 
 
 /*
 Destructor que llama a  la  funcion close de Render.
@@ -18,7 +18,7 @@ void Render::init()
 
     // Create the main window
     int width = 223*globalScale;
-    int heigth = 255*globalScale;
+    int heigth = 295*globalScale;
     window = new sf::RenderWindow(sf::VideoMode(width, heigth), "Pengo | Gonzalo G. Campos");
 
     spritesCont = 1;
@@ -51,11 +51,40 @@ void Render::preLoop(float dt)
 {
         // Process events
         sf::Event event;
+        g = false;
+        x = false;
+        n = false;
         while (window->pollEvent(event))
         {
             // Close window: exit
-            if (event.type == sf::Event::Closed)
-                window->close();
+            switch(event.type)
+            {
+                case sf::Event::Closed:
+                    window->close();
+                    break;
+                case sf::Event::KeyPressed:
+                    switch (event.key.code)
+                    {
+                    case sf::Keyboard::Escape:
+                        window->close();
+                        break;
+                    case sf::Keyboard::G:
+                        g = true;
+                        break;
+                    case sf::Keyboard::X:
+                        x = true;
+                        break;
+                    case sf::Keyboard::N:
+                        n = true;
+                        break;
+                    
+                    default:
+                        break;
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
         // Clear screen
         window->clear();

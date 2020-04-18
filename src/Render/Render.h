@@ -70,6 +70,10 @@ class Render
         float dt;
 
     public:
+        bool g = false;
+        bool x = false;
+        bool n = false;
+
         static Render* getInstance()
         {
             static Render onlyInstance;

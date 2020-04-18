@@ -4,7 +4,7 @@
 class IntroState : public IGameState 
 {
     private:
-        unsigned int pengo;
+        unsigned int pengo, sega;
         IntroState(){}         
     public:
 

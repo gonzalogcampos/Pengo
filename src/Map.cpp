@@ -1,5 +1,5 @@
 #include "Map.h"
-
+#include <iostream>
 #include "GameObject.h"
 #include "Pengo.h"
 #include "SnoBee.h"
@@ -38,6 +38,7 @@ void Map::clear()
         }
     }
     pengo = nullptr;
+    snoBeesCount = 0;
 }
 
 /*
@@ -66,7 +67,8 @@ Calls the draw() function of all the Game Objects in the map
 */
 void Map::draw()
 {
-    Render::getInstance()->drawSprite(spriteBack, Rvect(0,0), 0.f, 1.f, false);
+    Render::getInstance()->drawSprite(spriteBack, Rvect(0,40), 0.f, 1.f, false);
+    Render::getInstance()->drawSprite(spritePengo, Rvect(111,20), 0.f, .5f, true);
     for(size_t x=0; x<MAP_W; x++)
     {
         if(map[x])
@@ -140,7 +142,7 @@ Creates a Pengo in the xy position, then returns the pengo. Returns null if ther
 */
 Pengo* Map::createPengo(int x,int y)
 {
-    if(map[x] !=nullptr && map[x][y] == nullptr)
+    if(map[x][y] == nullptr)
     {
 
         map[x][y] = new Pengo(x, y);
@@ -195,20 +197,15 @@ SnoBee* Map::createSnobee(int x,int y)
 Calls the update(float dt) function of all the Game Objects in the map
 */
 void Map::update(float dt)
-{    
+{
+    events();
+    
     if(snoBeesCount <= 0)
     {
-        clear();
-        Game::getInstance()->setState(IGameState::INTRO);
+        loadNextLevel();
         return;
     }
 
-    if(pengo==nullptr)
-    {
-        clear();
-        Game::getInstance()->setState(IGameState::INTRO);
-        return;
-    }
     for(int x = 0; x<MAP_W; x++)
     {
         for(int y = 0; y<MAP_H; y++)
@@ -222,6 +219,10 @@ void Map::update(float dt)
                     if(ice->getHasToDie())
                     {
                         push(x, y);
+                    }else if(ice->isBroken())
+                    {
+                        push(x, y);
+                        createSnobee(x, y);
                     }
                 }
             }
@@ -239,97 +240,8 @@ void Map::update(float dt)
 void Map::init()
 {
     spriteBack = Render::getInstance()->createSprite("res/T2.png", Rrect(0, 0, 223, 255) );
-
-    createPengo(0, 0);
-    createEgg(1,0);
-    createEgg(1,1);
-    createIce(1,2);
-    createIce(1,3);
-    createIce(1,4);
-    createIce(1,6);
-    createIce(1,7);
-    createIce(1,8);
-    createIce(1,9);
-    createIce(1,11);
-    createIce(1,12);
-    createIce(1,13);
-    createIce(1,14);
-    createIce(2,3);
-    createIce(2,7);
-    createIce(3,1);
-    createIce(3,7);
-    createIce(3,8);
-    createIce(3,9);
-    createIce(3,10);
-    createIce(3,11);
-    createIce(3,12);
-    createIce(3,13);
-    createIce(4,1);
-    createIce(4,3);
-    createIce(4,5);
-    createIce(4,11);
-    createIce(5,0);
-    createIce(5,1);
-    createIce(5,3);
-    createIce(5,5);
-    createIce(5,7);
-    createIce(5,8);
-    createIce(5,9);
-    createIce(5,11);
-    createIce(5,13);
-    createIce(6,3);
-    createIce(6,5);
-    createIce(7,1);
-    createIce(7,2);
-    createIce(7,3);
-    createIce(7,5);
-    createIce(7,7);
-    createIce(7,9);
-    createIce(7,10);
-    createIce(7,11);
-    createIce(7,12);
-    createIce(7,13);
-    createIce(8,1);
-    createIce(8,5);
-    createIce(8,9);
-    createIce(8,13);
-    createIce(9,1);
-    createIce(9,3);
-    createIce(9,4);
-    createIce(9,6);
-    createIce(9,7);
-    createIce(9,8);
-    createIce(9,9);
-    createIce(9,11);
-    createIce(9,13);
-    createIce(10,3);
-    createIce(10,11);
-    createIce(11,0);
-    createIce(11,1);
-    createIce(11,2);
-    createIce(11,3);
-    createIce(11,4);
-    createIce(11,5);
-    createIce(11,6);
-    createIce(11,7);
-    createIce(11,9);
-    createIce(11,10);
-    createIce(11,11);
-    createIce(11,12);
-    createIce(11,13);
-    createIce(11,14);
-
-    createSnobee(4, 6);
-    //createSnobee(7, 4);
-    //createSnobee(9, 5);
-    //createSnobee(12, 10);
-    //createSnobee(2, 9);
-
-    
-
-
-
-
+    spritePengo = Render::getInstance()->createSprite("res/T1.png",  Rrect(0, 8, 143, 64));
+    loadNextLevel();
 }
 
 bool Map::pengoMoving(GameObject* pengo, int dir)
@@ -374,13 +286,12 @@ bool Map::pengoMoving(GameObject* pengo, int dir)
     {
         if(map[dx][dy] == nullptr)
         {
-        map[dx][dy] = map[x][y];
-        map[x][y] = nullptr;
-        return true;
-        }else if(SnoBee* snobee = dynamic_cast<SnoBee*>(map[dx][dy]))
+            map[dx][dy] = map[x][y];
+            map[x][y] = nullptr;
+            return true;
+        }else if(dynamic_cast<SnoBee*>(map[dx][dy]))
         {
-            delete pengo;
-            pengo = nullptr;
+            return hitPengo();
         }
     }
     return false;
@@ -481,12 +392,13 @@ bool Map::iceMoving(GameObject* ice, int dir)
             map[dx][dy] = map[x][y];
             map[x][y] = nullptr;
             return true;
-        }else if(SnoBee* snobee = dynamic_cast<SnoBee*>(map[dx][dy]))
+        }else if(dynamic_cast<SnoBee*>(map[dx][dy]))
         {  
             map[dx][dy] = map[x][y];
             map[x][y] = nullptr;
             push(dx, dy);
             snoBeesCount--;
+            breakEgg();
             return true;
         }
     }
@@ -541,13 +453,279 @@ bool Map::snobeeMoving(GameObject* snobee, int  dir)
         }
         if(map[dx][dy]==pengo)
         {
-            delete pengo;
-            pengo = nullptr;
-            map[dx][dy]=map[x][y];
-            map[x][y]=nullptr;
-            return true;
+            if(hitPengo())
+            {
+                map[dx][dy] = map[x][y];
+                map[x][y] = nullptr;
+                return true;
+            }else
+            {
+                return false;
+            }
         }
     }
     return false;
 }
 
+bool Map::hitPengo()
+{
+    if(modoDios)
+        return false;
+
+
+    if(pengo!=nullptr)
+    {
+        if(pengo->hit())
+        {
+            int x=pengo->getX();
+            int y=pengo->getY();
+            
+            for(int i = 0; i<MAP_W; i++)
+                for(int j = 0; j<MAP_H; j++)
+                    if(map[i][j]==nullptr)
+                    {
+                        map[x][y] = nullptr;
+                        map[i][j] = pengo;
+                        pengo->setX(i);
+                        pengo->setY(j);
+                        
+                        return true;
+                    }
+        }else{
+            clear();
+            level = 0;
+            Game::getInstance()->setState(IGameState::INTRO);
+        }
+    }
+    return true;
+}
+
+
+void Map::events()
+{
+        if(Render::getInstance()->g)
+        {
+            modoDios = !modoDios;
+        }
+        
+
+    if(Render::getInstance()->n)
+    {
+        level--;
+        loadNextLevel();
+    }
+
+    if(Render::getInstance()->x)
+    {
+        loadNextLevel();
+    }
+}
+
+void Map::loadNextLevel()
+{
+    clear();
+    level++;
+    switch (level)
+    {
+    case 1:
+        loadLevel1();
+        break;
+    case 2:
+        loadLevel2();
+        break;
+    default:
+        level = 0;
+        Game::getInstance()->setState(IGameState::INTRO);
+        break;
+    }
+}
+
+void Map::loadLevel1()
+{
+    createPengo(0, 0);
+    createEgg(1,0);
+    createEgg(1,1);
+    createIce(1,2);
+    createIce(1,3);
+    createIce(1,4);
+    createIce(1,6);
+    createIce(1,7);
+    createIce(1,8);
+    createIce(1,9);
+    createIce(1,11);
+    createIce(1,12);
+    createIce(1,13);
+    createIce(1,14);
+    createIce(2,3);
+    createIce(2,7);
+    createIce(3,1);
+    createIce(3,7);
+    createIce(3,8);
+    createIce(3,9);
+    createIce(3,10);
+    createIce(3,11);
+    createIce(3,12);
+    createIce(3,13);
+    createIce(4,1);
+    createIce(4,3);
+    createIce(4,5);
+    createIce(4,11);
+    createIce(5,0);
+    createIce(5,1);
+    createIce(5,3);
+    createIce(5,5);
+    createIce(5,7);
+    createIce(5,8);
+    createIce(5,9);
+    createIce(5,11);
+    createIce(5,13);
+    createIce(6,3);
+    createIce(6,5);
+    createIce(7,1);
+    createIce(7,2);
+    createIce(7,3);
+    createIce(7,5);
+    createIce(7,7);
+    createIce(7,9);
+    createIce(7,10);
+    createIce(7,11);
+    createIce(7,12);
+    createIce(7,13);
+    createIce(8,1);
+    createIce(8,5);
+    createIce(8,9);
+    createIce(8,13);
+    createIce(9,1);
+    createIce(9,3);
+    createIce(9,4);
+    createIce(9,6);
+    createIce(9,7);
+    createIce(9,8);
+    createIce(9,9);
+    createIce(9,11);
+    createIce(9,13);
+    createIce(10,3);
+    createIce(10,11);
+    createIce(11,0);
+    createIce(11,1);
+    createIce(11,2);
+    createIce(11,3);
+    createIce(11,4);
+    createIce(11,5);
+    createIce(11,6);
+    createIce(11,7);
+    createIce(11,9);
+    createIce(11,10);
+    createIce(11,11);
+    createIce(11,12);
+    createIce(11,13);
+    createIce(11,14);
+
+    createSnobee(4, 6);
+    //createSnobee(7, 4);
+    //createSnobee(9, 5);
+    //createSnobee(12, 10);
+    //createSnobee(2, 9);
+
+    
+}
+
+void Map::loadLevel2()
+{
+    createPengo(0, 0);
+    createEgg(1,0);
+    createEgg(1,1);
+    createIce(1,2);
+    createIce(1,3);
+    createIce(1,4);
+    createIce(1,6);
+    createIce(1,7);
+    createIce(1,8);
+    createIce(1,9);
+    createIce(1,11);
+    createIce(1,12);
+    createIce(1,13);
+    createIce(1,14);
+    createIce(2,3);
+    createIce(2,7);
+    createIce(3,1);
+    createIce(3,7);
+    createIce(3,8);
+    createIce(3,9);
+    createIce(3,10);
+    createIce(3,11);
+    createIce(3,12);
+    createIce(3,13);
+    createIce(4,1);
+    createIce(4,3);
+    createIce(4,5);
+    createIce(4,11);
+    createIce(5,0);
+    createIce(5,1);
+    createIce(5,3);
+    createIce(5,5);
+    createIce(5,7);
+    createIce(5,8);
+    createIce(5,9);
+    createIce(5,11);
+    createIce(5,13);
+    createIce(6,3);
+    createIce(6,5);
+    createIce(7,1);
+    createIce(7,2);
+    createIce(7,3);
+    createIce(7,5);
+    createIce(7,7);
+    createIce(7,9);
+    createIce(7,10);
+    createIce(7,11);
+    createIce(7,12);
+    createIce(7,13);
+    createIce(8,1);
+    createIce(8,5);
+    createIce(8,9);
+    createIce(8,13);
+    createIce(9,1);
+    createIce(9,3);
+    createIce(9,4);
+    createIce(9,6);
+    createIce(9,7);
+    createIce(9,8);
+    createIce(9,9);
+    createIce(9,11);
+    createIce(9,13);
+    createIce(10,3);
+    createIce(10,11);
+    createIce(11,0);
+    createIce(11,1);
+    createIce(11,2);
+    createIce(11,3);
+    createIce(11,4);
+    createIce(11,5);
+    createIce(11,6);
+    createIce(11,7);
+    createIce(11,9);
+    createIce(11,10);
+    createIce(11,11);
+    createIce(11,12);
+    createIce(11,13);
+    createIce(11,14);
+
+    createSnobee(4, 6);
+    createSnobee(7, 4);
+    createSnobee(9, 5);
+    createSnobee(12, 10);
+    createSnobee(2, 9);
+
+    
+}
+
+void Map::breakEgg()
+{
+    for(int x = 0; x< MAP_W; x++)
+        for(int y = 0; y<MAP_H; y++)
+            if(map[x][y]!=nullptr)
+                if(Ice* ice = dynamic_cast<Ice*>(map[x][y]))
+                    if(ice->breakEgg())
+                        return;
+}
