@@ -5,6 +5,7 @@
 #include "Ice.h"
 #include "Render.h"
 #include <Game.h>
+
 /*
 Initialize all the values
 */
@@ -47,7 +48,7 @@ GameObject* Map::getGameobject(int x, int y)
 {
     GameObject* r = nullptr;
 
-    if(map[x]!=nullptr && map[x][y]!=nullptr)
+    if(x>=0 && x<MAP_W && y>=0 && y<MAP_H && map[x]!=nullptr && map[x][y]!=nullptr)
         r = map[x][y];
 
     return r;
@@ -68,8 +69,23 @@ void Map::draw()
 {
     Render::getInstance()->drawSprite(spriteBack, Rvect(0, 40), 0.f, 1.f, false);
     Render::getInstance()->drawSprite(spritePengo, Rvect(111, 20), 0.f, .5f, true);
-    Render::getInstance()->drawSprite(spriteLevel, Rvect(160, 29), 0.f, 1.f, false);
-    Render::getInstance()->drawSprite(spriteNums[level], Rvect(200, 29), 0.f, 1.f, false);
+    Render::getInstance()->drawSprite(spriteLevel, Rvect(160, 29), 0.f, .8f, false);
+    Render::getInstance()->drawSprite(spriteNums[level], Rvect(195, 29), 0.f, .8f, false);
+    Render::getInstance()->drawSprite(spriteScore, Rvect(160, 15), 0.f, .8f, false);
+
+    int i = score/1000;
+    int r = 0;
+    Render::getInstance()->drawSprite(spriteNums[i], Rvect(194, 15), 0.f, .8f, false);
+    r += i*1000;
+    i = (score-r)/100;
+    Render::getInstance()->drawSprite(spriteNums[i], Rvect(201, 15), 0.f, .8f, false);
+    r += i*100;
+    i = (score-r)/10;
+    Render::getInstance()->drawSprite(spriteNums[i], Rvect(208, 15), 0.f, .8f, false);
+    r += i*10;
+    i = (score-r)/1;
+    Render::getInstance()->drawSprite(spriteNums[i], Rvect(215, 15), 0.f, .8f, false);
+
 
     int l = pengo->getLifes();
     for(int i=0; i<l; i++)
@@ -184,6 +200,18 @@ Ice* Map::createEgg(int x, int y)
     return nullptr;
 }
 
+Ice* Map::createDiamond(int x, int y)
+{
+    if(map[x] !=nullptr && map[x][y] == nullptr)
+    {
+        Ice* ice = new Ice(x, y);
+        ice->setDiamond();
+        map[x][y] = ice;
+        return (Ice*)map[x][y];
+    }
+    return nullptr;
+}
+
 /*
 Creates a Sno-Bee in the xy position, then returns the pengo. Returns null if there is something in xy
 */
@@ -245,12 +273,14 @@ void Map::update(float dt)
 
 void Map::init()
 {
+    score = 0;
     spriteBack = Render::getInstance()->createSprite("res/T2.png", Rrect(0, 0, 223, 255) );
     spritePengo = Render::getInstance()->createSprite("res/T1.png",  Rrect(0, 8, 143, 64));
     spriteLife = Render::getInstance()->createSprite("res/T1.png", Rrect(0, 150, 16, 16));
     spriteLoadingB = Render::getInstance()->createSprite("res/T5.png");
     spriteLoading = Render::getInstance()->createSprite("res/T1.png", Rrect(7, 175, 130, 13));
     spriteLevel = Render::getInstance()->createSprite("res/T1.png", Rrect(68, 179, 37, 10));
+    spriteScore = Render::getInstance()->createSprite("res/T1.png", Rrect(0, 190, 37, 10));
 
     for(int i = 0; i<10; i++)
         spriteNums[i] = Render::getInstance()->createSprite("res/T1.png", Rrect(0 + i*9, 229, 8, 8));
@@ -315,7 +345,10 @@ bool Map::pengoMoving(GameObject* pengo, int dir)
 void Map::pengoHits(int x,int y, int dir)
 {
     if(x<0 || x>=MAP_W || y<0 || y>=MAP_H)
+    {
+        stunOnMargin();
         return;
+    }
 
     if(map[x][y]==nullptr)
         return;
@@ -346,10 +379,14 @@ void Map::pengoHits(int x,int y, int dir)
                 ice->hits(dir);
                 map[dx][dy] = map[x][y];
                 map[x][y] = nullptr;
-            }else if(SnoBee* snobee = dynamic_cast<SnoBee*>(map[dx][dy]))
+            }else if(dynamic_cast<SnoBee*>(map[dx][dy]))
             {
                 push(dx, dy);
                 snoBeesCount--;
+                if(diamantesAlineados)
+                    score += 300;
+                else
+                    score +=100;
                 ice->hits(dir);
                 map[dx][dy] = map[x][y];
                 map[x][y] = nullptr;
@@ -409,10 +446,14 @@ bool Map::iceMoving(GameObject* ice, int dir)
             return true;
         }else if(dynamic_cast<SnoBee*>(map[dx][dy]))
         {  
+            push(dx, dy);
             map[dx][dy] = map[x][y];
             map[x][y] = nullptr;
-            push(dx, dy);
             snoBeesCount--;
+            if(diamantesAlineados)
+                score += 300;
+            else
+                score +=100;
             breakEgg();
             return true;
         }
@@ -541,6 +582,7 @@ void Map::loadNextLevel()
 {
     clear();
     snoBeesCount = 0;
+    diamantesAlineados = false;
     level++;
     Render::getInstance()->drawSprite(spriteLoadingB, Rvect(0, 0), 0.f, 1.f, false);
     Render::getInstance()->drawSprite(spriteLoading, Rvect(111, 100));
@@ -566,6 +608,7 @@ void Map::loadNextLevel()
 void Map::loadLevel1()
 {
     createPengo(7, 6);
+
     createIce(0,7);
     createIce(1,1);
     createIce(1,2);
@@ -585,7 +628,7 @@ void Map::loadLevel1()
     createIce(3,1);
     createIce(3,2);
     createIce(3,3);
-    createIce(3,5);
+    createDiamond(3,5);
     createIce(3,6);
     createIce(3,9);
     createIce(3,11);
@@ -598,7 +641,7 @@ void Map::loadLevel1()
     createIce(5,4);
     createIce(5,5);
     createIce(5,6);
-    createIce(5,7);
+    createDiamond(5,7);
     createIce(5,8);
     createIce(5,9);
     createIce(5,11);
@@ -640,7 +683,7 @@ void Map::loadLevel1()
     createIce(11,5);
     createIce(11,7);
     createIce(11,9);
-    createIce(11,10);
+    createDiamond(11,10);
     createIce(11,11);
     createIce(11,12);
     createIce(11,13);
@@ -776,3 +819,151 @@ void Map::breakEgg()
                         return;
 }
 
+void Map::testDiamonds(int x, int y)
+{
+    Ice* i;
+    //Vertical
+    if((i = dynamic_cast<Ice*>(getGameobject(x-1, y))))
+    {
+        if(i->isDiamond())
+        {
+            if((i = dynamic_cast<Ice*>(getGameobject(x-2, y))))
+            {
+                if(i->isDiamond())
+                {
+                    //Diamantes alineados
+                    dynamic_cast<Ice*>(getGameobject(x, y))->align();
+                    dynamic_cast<Ice*>(getGameobject(x-1, y))->align();
+                    dynamic_cast<Ice*>(getGameobject(x-2, y))->align();
+                    stunAll();
+                    diamantesAlineados = true;
+                    return;
+                }
+            }else if((i = dynamic_cast<Ice*>(getGameobject(x+1, y))))
+            {
+                if(i->isDiamond())
+                {
+                    //Diamantes alineados
+                    dynamic_cast<Ice*>(getGameobject(x, y))->align();
+                    dynamic_cast<Ice*>(getGameobject(x-1, y))->align();
+                    dynamic_cast<Ice*>(getGameobject(x+1, y))->align();
+                    stunAll();
+                    diamantesAlineados = true;
+                    return;
+
+                }
+            }
+        }
+    }
+
+    if((i = dynamic_cast<Ice*>(getGameobject(x+1, y))))
+    {
+        if(i->isDiamond())
+        {
+            if((i = dynamic_cast<Ice*>(getGameobject(x+2, y))))
+            {
+                if(i->isDiamond())
+                {
+                    //Diamantes alineados
+                    dynamic_cast<Ice*>(getGameobject(x, y))->align();
+                    dynamic_cast<Ice*>(getGameobject(x+1, y))->align();
+                    dynamic_cast<Ice*>(getGameobject(x+2, y))->align();
+                    stunAll();
+                    diamantesAlineados = true;
+                    return;
+                }
+            }
+        }
+    }
+
+    //Horizontal
+    if((i = dynamic_cast<Ice*>(getGameobject(x, y-1))))
+    {
+        if(i->isDiamond())
+        {
+            if((i = dynamic_cast<Ice*>(getGameobject(x, y-2))))
+            {
+                if(i->isDiamond())
+                {
+                    //Diamantes alineados
+                    dynamic_cast<Ice*>(getGameobject(x, y))->align();
+                    dynamic_cast<Ice*>(getGameobject(x, y-1))->align();
+                    dynamic_cast<Ice*>(getGameobject(x, y-2))->align();
+                    stunAll();
+                    diamantesAlineados = true;
+                    return;
+                }
+            }else if((i = dynamic_cast<Ice*>(getGameobject(x, y+1))))
+            {
+                if(i->isDiamond())
+                {
+                    //Diamantes alineados
+                    dynamic_cast<Ice*>(getGameobject(x, y))->align();
+                    dynamic_cast<Ice*>(getGameobject(x, y-1))->align();
+                    dynamic_cast<Ice*>(getGameobject(x, y+1))->align();
+                    stunAll();
+                    diamantesAlineados = true;
+                    return;
+                }
+            }
+        }
+    }
+
+    if((i = dynamic_cast<Ice*>(getGameobject(x, y+1))))
+    {
+        if(i->isDiamond())
+        {
+            if((i = dynamic_cast<Ice*>(getGameobject(x, y+2))))
+            {
+                if(i->isDiamond())
+                {
+                    //Diamantes alineados
+                    dynamic_cast<Ice*>(getGameobject(x, y))->align();
+                    dynamic_cast<Ice*>(getGameobject(x, y+1))->align();
+                    dynamic_cast<Ice*>(getGameobject(x, y+2))->align();
+                    stunAll();
+                    diamantesAlineados = true;
+                    return;
+                }
+            }
+        }
+    }
+}
+
+
+void Map::stunAll()
+{
+    for(int x = 0; x< MAP_W; x++)
+        for(int y = 0; y<MAP_H; y++)
+            if(map[x][y]!=nullptr)
+                if(SnoBee* snobee = dynamic_cast<SnoBee*>(map[x][y]))
+                    snobee->stun();
+
+}
+
+void Map::stunOnMargin()
+{
+
+    for(int x = 0; x< MAP_W; x++)
+    {
+        if(map[x][0]!=nullptr)
+                if(SnoBee* snobee = dynamic_cast<SnoBee*>(map[x][0]))
+                    snobee->stun();
+
+        if(map[x][MAP_H-1]!=nullptr)
+            if(SnoBee* snobee = dynamic_cast<SnoBee*>(map[x][MAP_H-1]))
+                snobee->stun();
+    }
+
+
+    for(int y = 1; y< MAP_H-1; y++)
+    {
+        if(map[0][y]!=nullptr)
+                if(SnoBee* snobee = dynamic_cast<SnoBee*>(map[0][y]))
+                    snobee->stun();
+
+        if(map[MAP_W-1][y]!=nullptr)
+            if(SnoBee* snobee = dynamic_cast<SnoBee*>(map[MAP_W-1][y]))
+                snobee->stun();
+    }
+}

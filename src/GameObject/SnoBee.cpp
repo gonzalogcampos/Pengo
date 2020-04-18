@@ -2,8 +2,8 @@
 #include "Render.h"
 #include "Map.h"
 
-
 const float VELOCITY = .3f;
+const float TIMESTUNNED = 5.f;
 
 SnoBee::SnoBee(int x, int y) : GameObject(x, y)
 {
@@ -27,7 +27,9 @@ SnoBee::SnoBee(int x, int y) : GameObject(x, y)
     anim_WR = Render::getInstance()->createAnimation(10);
     Render::getInstance()->addFrameToAnimation(anim_WR, Render::getInstance()->createSprite("res/T3.png",Rrect(6*16,144,16, 16)));
     Render::getInstance()->addFrameToAnimation(anim_WR, Render::getInstance()->createSprite("res/T3.png",Rrect(7*16,144,16,16)));
-
+    anim_Stunned = Render::getInstance()->createAnimation(5);
+    Render::getInstance()->addFrameToAnimation(anim_Stunned, Render::getInstance()->createSprite("res/T3.png",Rrect(6*16,16*8,16, 16)));
+    Render::getInstance()->addFrameToAnimation(anim_Stunned, Render::getInstance()->createSprite("res/T3.png",Rrect(7*16,16*8,16, 16)));
 
     state= S_D;
 }
@@ -51,6 +53,18 @@ void SnoBee::update(float dt)
         return;
 
     this->wasUpdate = true;
+
+    if(state == STUNNED)
+    {
+        stunned_Time += dt;
+        if(stunned_Time>TIMESTUNNED)
+        {
+            state=S_D;
+            stunned_Time = 0.f;
+        }
+
+        return;
+    }
 
     if(state == S_D || state == S_U || state == S_L ||state == S_R)
     {
@@ -93,6 +107,8 @@ void SnoBee::update(float dt)
                     walking_Time = 0.f;
                     hasContinue = true;
                 }
+                break;
+            default:
                 break;
         }
         if(!hasContinue)
@@ -183,8 +199,18 @@ void SnoBee::draw()
         case W_R:
             Render::getInstance()->drawAnimation(anim_WR, Rvect((x*16+8) - delay, y*16+48), 0.f, 1.f, false);
             break;
+        case STUNNED:
+            Render::getInstance()->drawAnimation(anim_Stunned, Rvect(x*16+8, y*16+48), 0.f, 1.f, false);
+            break;
         
         default:
             break;
     }
+}
+
+
+void SnoBee::stun()
+{
+    state = STUNNED;
+    stunned_Time = 0.f;
 }

@@ -55,6 +55,7 @@ void Ice::update(float dt)
                 {
                     y--;
                 }else{
+                    findAlignDiamonds();
                     state = STATIC;
                 }
                 break;
@@ -63,6 +64,7 @@ void Ice::update(float dt)
                 {
                     y++;
                 }else{
+                    findAlignDiamonds();
                     state = STATIC;
                 }
                 break;
@@ -71,6 +73,7 @@ void Ice::update(float dt)
                 {
                     x--;
                 }else{
+                    findAlignDiamonds();
                     state = STATIC;
                 }
                 break;
@@ -79,6 +82,7 @@ void Ice::update(float dt)
                 {
                     x++;
                 }else{
+                    findAlignDiamonds();
                     state = STATIC;
                 }
                 break;
@@ -90,6 +94,8 @@ void Ice::update(float dt)
                 break;
             case BREAKING:
                 brokenEgg = true;
+                break;
+            default:
                 break;
         }
     }
@@ -165,7 +171,7 @@ void Ice::hits(int dir)
 
 void Ice::dies()
 {
-    if(state != DYING)
+    if(state != DYING && !diamond)
     {
         state = DYING;
         state_Time = 0.f;
@@ -203,6 +209,7 @@ void Ice::setEgg()
     state = EGGVIEW;
     state_Duration = TIMEEGGVIEW;
     egg = true;
+    diamond = false;
 }
 
 bool Ice::breakEgg()
@@ -220,4 +227,31 @@ bool Ice::breakEgg()
 bool Ice::isBroken()
 {
     return brokenEgg;
+}
+
+
+void Ice::setDiamond()
+{
+    egg = false;
+    diamond  = true;
+    sprite = Render::getInstance()->createSprite("res/T2.png", Rrect(708, 16, 16, 16));
+}
+
+bool Ice::isDiamond()
+{
+    return diamond; 
+}
+
+void Ice::findAlignDiamonds()
+{
+    if(diamond)
+        Map::getInstance()->testDiamonds(x, y);
+}
+
+void Ice::align()
+{
+    if(diamond)
+    {
+        sprite = Render::getInstance()->createSprite("res/T2.png", Rrect(708, 32, 16, 16));
+    }
 }

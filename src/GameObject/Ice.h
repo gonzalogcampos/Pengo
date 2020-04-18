@@ -15,6 +15,7 @@ class Ice : public GameObject
         unsigned int eggBreaking;
         bool hasToDie = false;
         bool egg = false;
+        bool diamond = false;
         bool brokenEgg = false;
     public:  
         Ice(int x, int y);
@@ -35,4 +36,9 @@ class Ice : public GameObject
         bool isEgg();
         bool breakEgg();
         bool isBroken();
+
+        void setDiamond();
+        bool isDiamond();
+        void findAlignDiamonds();
+        void align();
 };

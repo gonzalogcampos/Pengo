@@ -18,9 +18,11 @@ class Map
 
         int snoBeesCount = 0;
         int level = 0;
-        unsigned int spriteBack, spritePengo, spriteLife, spriteLoadingB, spriteLoading, spriteLevel;
+        int score = 0;
+        unsigned int spriteBack, spritePengo, spriteLife, spriteLoadingB, spriteLoading, spriteLevel, spriteScore;
         unsigned int spriteNums[10];
         bool modoDios = false;
+        bool diamantesAlineados = false;
     public:
         /*
         Singleton
@@ -42,8 +44,9 @@ class Map
         bool getPosition(GameObject* gameObject, int &x, int &y);
         Pengo* createPengo(int x, int y);
         Ice* createIce(int x, int y);
-        SnoBee* createSnobee(int x, int y);
         Ice* createEgg(int x, int y);
+        Ice* createDiamond(int x, int y);
+        SnoBee* createSnobee(int x, int y);
         void update(float dt);
         bool pengoMoving(GameObject* pengo, int dir);
         void pengoHits(int x, int y, int dir);
@@ -57,4 +60,7 @@ class Map
         void events();
         void breakEgg();
         void eggBreaks();
+        void testDiamonds(int x, int y);
+        void stunAll();
+        void stunOnMargin();
 };
