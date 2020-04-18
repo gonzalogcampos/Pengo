@@ -60,6 +60,7 @@ class Map
         void events();
         void breakEgg();
         void eggBreaks();
+        void showEggs();
         void testDiamonds(int x, int y);
         void stunAll();
         void stunOnMargin();

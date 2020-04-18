@@ -36,6 +36,7 @@ class Ice : public GameObject
         bool isEgg();
         bool breakEgg();
         bool isBroken();
+        void showEgg();
 
         void setDiamond();
         bool isDiamond();

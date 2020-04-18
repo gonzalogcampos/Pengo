@@ -229,6 +229,11 @@ bool Ice::isBroken()
     return brokenEgg;
 }
 
+void Ice::showEgg()
+{
+    state = EGGVIEW;
+    state_Duration = 10.f;
+}
 
 void Ice::setDiamond()
 {

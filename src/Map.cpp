@@ -725,7 +725,7 @@ void Map::loadLevel2()
     createIce(4,1);
     createIce(4,3);
     createIce(4,5);
-    createIce(4,11);
+    createDiamond(4,11);
     createIce(5,0);
     createIce(5,1);
     createIce(5,3);
@@ -752,7 +752,7 @@ void Map::loadLevel2()
     createIce(8,9);
     createIce(8,13);
     createIce(9,1);
-    createIce(9,3);
+    createDiamond(9,3);
     createIce(9,4);
     createIce(9,6);
     createIce(9,7);
@@ -773,7 +773,7 @@ void Map::loadLevel2()
     createEgg(11,9);
     createIce(11,10);
     createIce(11,11);
-    createIce(11,12);
+    createDiamond(11,12);
     createIce(11,13);
     createIce(11,14);
     createSnobee(4, 6);
@@ -819,6 +819,17 @@ void Map::breakEgg()
                         return;
 }
 
+void Map::showEggs()
+{
+    for(int x = 0; x< MAP_W; x++)
+        for(int y = 0; y<MAP_H; y++)
+            if(map[x][y]!=nullptr)
+                if(Ice* ice = dynamic_cast<Ice*>(map[x][y]))
+                    if(ice->isEgg())
+                        ice->showEgg();
+}
+
+
 void Map::testDiamonds(int x, int y)
 {
     Ice* i;
@@ -836,6 +847,7 @@ void Map::testDiamonds(int x, int y)
                     dynamic_cast<Ice*>(getGameobject(x-1, y))->align();
                     dynamic_cast<Ice*>(getGameobject(x-2, y))->align();
                     stunAll();
+                    showEggs();
                     diamantesAlineados = true;
                     return;
                 }
@@ -848,6 +860,7 @@ void Map::testDiamonds(int x, int y)
                     dynamic_cast<Ice*>(getGameobject(x-1, y))->align();
                     dynamic_cast<Ice*>(getGameobject(x+1, y))->align();
                     stunAll();
+                    showEggs();
                     diamantesAlineados = true;
                     return;
 
@@ -869,6 +882,7 @@ void Map::testDiamonds(int x, int y)
                     dynamic_cast<Ice*>(getGameobject(x+1, y))->align();
                     dynamic_cast<Ice*>(getGameobject(x+2, y))->align();
                     stunAll();
+                    showEggs();
                     diamantesAlineados = true;
                     return;
                 }
@@ -890,6 +904,7 @@ void Map::testDiamonds(int x, int y)
                     dynamic_cast<Ice*>(getGameobject(x, y-1))->align();
                     dynamic_cast<Ice*>(getGameobject(x, y-2))->align();
                     stunAll();
+                    showEggs();
                     diamantesAlineados = true;
                     return;
                 }
@@ -902,6 +917,7 @@ void Map::testDiamonds(int x, int y)
                     dynamic_cast<Ice*>(getGameobject(x, y-1))->align();
                     dynamic_cast<Ice*>(getGameobject(x, y+1))->align();
                     stunAll();
+                    showEggs();
                     diamantesAlineados = true;
                     return;
                 }
@@ -922,6 +938,7 @@ void Map::testDiamonds(int x, int y)
                     dynamic_cast<Ice*>(getGameobject(x, y+1))->align();
                     dynamic_cast<Ice*>(getGameobject(x, y+2))->align();
                     stunAll();
+                    showEggs();
                     diamantesAlineados = true;
                     return;
                 }
@@ -943,7 +960,7 @@ void Map::stunAll()
 
 void Map::stunOnMargin()
 {
-
+    Render::getInstance()->shake(); 
     for(int x = 0; x< MAP_W; x++)
     {
         if(map[x][0]!=nullptr)

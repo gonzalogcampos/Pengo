@@ -67,8 +67,9 @@ class Render
 
         float globalScale;
 
-        float dt;
+        float shakeTime = 0.f;
 
+        float dt;
     public:
         bool g = false;
         bool x = false;
@@ -135,6 +136,8 @@ class Render
         bool drawAnimation(Rint animation);
 
         bool drawAnimation(Rint animation, Rvect position, float rotation = 0.f, float scale = 1.f, bool centered = true);
+
+        void shake();
 
 
 };
