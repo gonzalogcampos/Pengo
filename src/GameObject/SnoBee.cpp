@@ -45,6 +45,7 @@ SnoBee::~SnoBee()
     r->deleteAnimation(anim_WD);
     r->deleteAnimation(anim_WL);
     r->deleteAnimation(anim_WR);
+    r->deleteAnimation(anim_Stunned);
 }
 
 void SnoBee::update(float dt)

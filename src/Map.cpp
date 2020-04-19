@@ -5,13 +5,22 @@
 #include <Ice.h>
 #include <Render.h>
 #include <Game.h>
-
+#include <unistd.h>
 /*
 Initialize all the values
 */
 Map::Map()
 {
+    spriteBack = Render::getInstance()->createSprite("res/T2.png", Rrect(0, 0, 223, 255) );
+    spritePengo = Render::getInstance()->createSprite("res/T1.png",  Rrect(0, 8, 143, 64));
+    spriteLife = Render::getInstance()->createSprite("res/T1.png", Rrect(0, 150, 16, 16));
+    spriteLoadingB = Render::getInstance()->createSprite("res/T5.png");
+    spriteLoading = Render::getInstance()->createSprite("res/T1.png", Rrect(7, 175, 130, 13));
+    spriteLevel = Render::getInstance()->createSprite("res/T1.png", Rrect(68, 179, 37, 10));
+    spriteScore = Render::getInstance()->createSprite("res/T1.png", Rrect(0, 190, 37, 10));
 
+    for(int i = 0; i<10; i++)
+        spriteNums[i] = Render::getInstance()->createSprite("res/T1.png", Rrect(0 + i*9, 229, 8, 8));
 }
 
 
@@ -71,8 +80,9 @@ void Map::draw()
     Render::getInstance()->drawSprite(spritePengo, Rvect(111, 20), 0.f, .5f, true);
     Render::getInstance()->drawSprite(spriteLevel, Rvect(160, 29), 0.f, .8f, false);
     Render::getInstance()->drawSprite(spriteNums[level], Rvect(195, 29), 0.f, .8f, false);
-    Render::getInstance()->drawSprite(spriteScore, Rvect(160, 15), 0.f, .8f, false);
 
+    //SCORE
+    Render::getInstance()->drawSprite(spriteScore, Rvect(160, 15), 0.f, .8f, false);
     int i = score/1000;
     int r = 0;
     Render::getInstance()->drawSprite(spriteNums[i], Rvect(194, 15), 0.f, .8f, false);
@@ -86,11 +96,13 @@ void Map::draw()
     i = (score-r)/1;
     Render::getInstance()->drawSprite(spriteNums[i], Rvect(215, 15), 0.f, .8f, false);
 
-
+    //LIFES
     int l = pengo->getLifes();
     for(int i=0; i<l; i++)
         Render::getInstance()->drawSprite(spriteLife, Rvect(20*(i+1)-10, 30));
 
+
+    //MAP
     for(size_t x=0; x<MAP_W; x++)
     {
         if(map[x])
@@ -164,7 +176,7 @@ Creates a Pengo in the xy position, then returns the pengo. Returns null if ther
 */
 Pengo* Map::createPengo(int x,int y)
 {
-    if(map[x][y] == nullptr)
+    if(map[x] !=nullptr && map[x][y] == nullptr)
     {
 
         map[x][y] = new Pengo(x, y);
@@ -233,7 +245,6 @@ Calls the update(float dt) function of all the Game Objects in the map
 void Map::update(float dt)
 {
     events();
-    
     if(snoBeesCount <= 0)
     {
         loadNextLevel();
@@ -274,17 +285,6 @@ void Map::update(float dt)
 void Map::init()
 {
     score = 0;
-    spriteBack = Render::getInstance()->createSprite("res/T2.png", Rrect(0, 0, 223, 255) );
-    spritePengo = Render::getInstance()->createSprite("res/T1.png",  Rrect(0, 8, 143, 64));
-    spriteLife = Render::getInstance()->createSprite("res/T1.png", Rrect(0, 150, 16, 16));
-    spriteLoadingB = Render::getInstance()->createSprite("res/T5.png");
-    spriteLoading = Render::getInstance()->createSprite("res/T1.png", Rrect(7, 175, 130, 13));
-    spriteLevel = Render::getInstance()->createSprite("res/T1.png", Rrect(68, 179, 37, 10));
-    spriteScore = Render::getInstance()->createSprite("res/T1.png", Rrect(0, 190, 37, 10));
-
-    for(int i = 0; i<10; i++)
-        spriteNums[i] = Render::getInstance()->createSprite("res/T1.png", Rrect(0 + i*9, 229, 8, 8));
-
     loadNextLevel(); 
 }
 
@@ -326,7 +326,7 @@ bool Map::pengoMoving(GameObject* pengo, int dir)
         break;
     }
 
-    if(dx>=0 && dx<MAP_W && dy>=0 && dy<MAP_H && map[dx][dy]==nullptr)
+    if(dx>=0 && dx<MAP_W && dy>=0 && dy<MAP_H)
     {
         if(map[dx][dy] == nullptr)
         {
@@ -545,7 +545,7 @@ bool Map::hitPengo()
                         map[i][j] = pengo;
                         pengo->setX(i);
                         pengo->setY(j);
-                        
+                        Render::getInstance()->shake();
                         return true;
                     }
         }else{
@@ -556,8 +556,7 @@ bool Map::hitPengo()
     }
     return true;
 }
-
-
+ 
 void Map::events()
 {
         if(Render::getInstance()->g)
@@ -587,6 +586,9 @@ void Map::loadNextLevel()
     Render::getInstance()->drawSprite(spriteLoadingB, Rvect(0, 0), 0.f, 1.f, false);
     Render::getInstance()->drawSprite(spriteLoading, Rvect(111, 100));
     Render::getInstance()->postLoop();
+
+    usleep(1000000.f);
+
     switch (level)
     {
     case 1:
@@ -698,6 +700,7 @@ void Map::loadLevel1()
 
 void Map::loadLevel2()
 {
+
     createPengo(0, 0);
     createIce(1,0);
     createIce(1,1);
@@ -787,15 +790,33 @@ void Map::loadLevel2()
 
 void Map::loadLevelRandom()
 {
-    int x = rand()%MAP_W;
-    int y = rand()%MAP_H;
-    pengo = createPengo(x, y);
+
+    int x[4];
+    int y[4];
+
+    for(int i = 0; i<4; i++)
+    {
+        bool again;
+        do{
+            x[i] = rand()%MAP_W;
+            y[i] = rand()%MAP_H;
+            again = false;
+            for(int j = 0; j<i; j++)
+                if(x[i]==x[j] && y[i]==y[j])
+                    again = true;
+
+        }while(again);
+    }
+
+    pengo = createPengo(x[0], y[0]);
+    createDiamond(x[1], y[1]);
+    createDiamond(x[2], y[2]);
+    createDiamond(x[3], y[3]);
+
     for(int i = 0; i<MAP_W; i++)
     {
         for(int j = 0; j<MAP_H; j++)
         {
-            if(i!=x && j!=y)
-            {
             int r = rand()%100;
             if(r<5)
                 createSnobee(i, j);
@@ -803,9 +824,9 @@ void Map::loadLevelRandom()
                 createEgg(i, j);
             else if(r<50)
                 createIce(i, j);
-            }
         }
     }
+
 
 }
 

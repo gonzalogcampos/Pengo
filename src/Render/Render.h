@@ -95,6 +95,8 @@ class Render
 
         void postLoop();
 
+        void events();
+
         void clearMemory();
 
         void setGlobalScale(float scale);

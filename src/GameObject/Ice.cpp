@@ -29,9 +29,12 @@ Ice::Ice(int x, int y) : GameObject(x, y)
 Ice::~Ice()
 {
     Render* r = Render::getInstance();
+    r->deleteSprite(sprite);
     r->deleteAnimation(dyingAnimation);
     r->deleteAnimation(eggViewAnimation);
+    r->deleteAnimation(eggBreaking);
 }
+
 void Ice::update(float dt)
 {
     if(this->wasUpdate)

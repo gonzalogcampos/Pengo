@@ -33,6 +33,7 @@ void Game::run()
 
         if(clock.canContinue())
         {
+            Render::getInstance()->events();
             float t = clock.getElapsedTime();
             state->update(t);
         }

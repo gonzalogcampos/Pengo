@@ -1,5 +1,4 @@
 #include <Render.h>
-
 /*
 Destructor que llama a  la  funcion close de Render.
 */
@@ -48,43 +47,6 @@ Comprueba que la ventana este abierta, y borra todo lo dibujado antes.
 */
 void Render::preLoop(float dt)
 {
-        // Process events
-        sf::Event event;
-        g = false;
-        x = false;
-        n = false;
-        while (window->pollEvent(event))
-        {
-            // Close window: exit
-            switch(event.type)
-            {
-                case sf::Event::Closed:
-                    window->close();
-                    break;
-                case sf::Event::KeyPressed:
-                    switch (event.key.code)
-                    {
-                    case sf::Keyboard::Escape:
-                        window->close();
-                        break;
-                    case sf::Keyboard::G:
-                        g = true;
-                        break;
-                    case sf::Keyboard::X:
-                        x = true;
-                        break;
-                    case sf::Keyboard::N:
-                        n = true;
-                        break;
-                    
-                    default:
-                        break;
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
         // Clear screen
         window->clear();
 
@@ -102,6 +64,47 @@ void Render::postLoop()
         window->display();
 }
 
+
+void Render::events()
+{
+    // Process events
+    sf::Event event;
+    g = false;
+    x = false;
+    n = false;
+    while (window->pollEvent(event))
+    {
+        // Close window: exit
+        switch(event.type)
+        {
+            case sf::Event::Closed:
+                window->close();
+                break;
+            case sf::Event::KeyPressed:
+                switch (event.key.code)
+                {
+                case sf::Keyboard::Escape:
+                    window->close();
+                    break;
+                case sf::Keyboard::G:
+                    g = true;
+                    break;
+                case sf::Keyboard::X:
+                    x = true;
+                    break;
+                case sf::Keyboard::N:
+                    n = true;
+                    break;
+                
+                default:
+                    break;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+}
 /*
 Borra toda la memoria reservada.
 */
@@ -135,6 +138,11 @@ Si la textura ya estaba cargada no la actualiza
 */
 bool Render::loadTexture(std::string texture)
 {
+    if(textures.find(texture)!=textures.end())
+        return true;
+    
+
+
     sf:: Texture*  tex= new sf::Texture();
     if(!tex->loadFromFile(texture))
         return false;

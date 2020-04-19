@@ -7,7 +7,7 @@ class IntroState : public IGameState
         unsigned int pengo, sega, info;
         float time = 0.f;
         bool drawInfo = false;
-        IntroState(){}         
+        IntroState();         
     public:
 
          static IntroState* getInstance(){

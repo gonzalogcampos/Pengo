@@ -2,13 +2,16 @@
 #include <Render.h>
 #include <Game.h>
 
+IntroState::IntroState()
+{
+    pengo = Render::getInstance()->createSprite("res/T1.png", Rrect(0, 8, 143, 64));
+    sega = Render::getInstance()->createSprite("res/T1.png", Rrect(0, 74, 71, 23));
+    info = Render::getInstance()->createSprite("res/T1.png", Rrect(0, 200, 80, 19));
+}
 
 void IntroState::initState()
 {
     type = IGameState::INTRO;
-    pengo = Render::getInstance()->createSprite("res/T1.png", Rrect(0, 8, 143, 64));
-    sega = Render::getInstance()->createSprite("res/T1.png", Rrect(0, 74, 71, 23));
-    info = Render::getInstance()->createSprite("res/T1.png", Rrect(0, 200, 80, 19));
 } 
 
 
