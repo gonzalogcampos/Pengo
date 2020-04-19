@@ -559,19 +559,18 @@ bool Map::hitPengo()
  
 void Map::events()
 {
-        if(Render::getInstance()->g)
-        {
-            modoDios = !modoDios;
-        }
-        
-
-    if(Render::getInstance()->n)
+    if(Render::getInstance()->g)
+    {
+        modoDios = !modoDios;
+    }
+    
+    if(Render::getInstance()->x)
     {
         level--;
         loadNextLevel();
     }
 
-    if(Render::getInstance()->x)
+    if(Render::getInstance()->n)
     {
         loadNextLevel();
     }

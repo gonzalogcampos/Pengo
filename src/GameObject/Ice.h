@@ -9,10 +9,7 @@ class Ice : public GameObject
         iceState state = STATIC;
         float state_Time = 0.f;
         float  state_Duration = 1.f;
-        unsigned int sprite;
-        unsigned int dyingAnimation;
-        unsigned int eggViewAnimation;
-        unsigned int eggBreaking;
+        unsigned int sprite, dyingAnimation, eggViewAnimation, eggBreaking;
         bool hasToDie = false;
         bool egg = false;
         bool diamond = false;

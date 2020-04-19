@@ -4,6 +4,7 @@
 #include <Render.h>
 
 const float VELOCITY = .3f;
+const float TIMEHITTED = .2f;
 
 Pengo::Pengo(int x, int y) : GameObject(x, y)
 {
@@ -27,6 +28,26 @@ Pengo::Pengo(int x, int y) : GameObject(x, y)
     anim_WR = Render::getInstance()->createAnimation(15);
     Render::getInstance()->addFrameToAnimation(anim_WR, Render::getInstance()->createSprite("res/T3.png",Rrect(96,0,16, 16)));
     Render::getInstance()->addFrameToAnimation(anim_WR, Render::getInstance()->createSprite("res/T3.png",Rrect(112,0,16,16)));
+    anim_HU = Render::getInstance()->createAnimation(15);
+    Render::getInstance()->addFrameToAnimation(anim_HU, Render::getInstance()->createSprite("res/T3.png",Rrect(5*16,0*16,16,16)));
+    Render::getInstance()->addFrameToAnimation(anim_HU, Render::getInstance()->createSprite("res/T3.png",Rrect(5*16,1*16,16,16)));
+    Render::getInstance()->addFrameToAnimation(anim_HU, Render::getInstance()->createSprite("res/T3.png",Rrect(4*16,1*16,16,16)));
+    Render::getInstance()->addFrameToAnimation(anim_HU, Render::getInstance()->createSprite("res/T3.png",Rrect(5*16,1*16,16,16)));
+    anim_HD = Render::getInstance()->createAnimation(15);   
+    Render::getInstance()->addFrameToAnimation(anim_HD, Render::getInstance()->createSprite("res/T3.png",Rrect(1*16,0*16,16,16)));
+    Render::getInstance()->addFrameToAnimation(anim_HD, Render::getInstance()->createSprite("res/T3.png",Rrect(1*16,1*16,16,16)));
+    Render::getInstance()->addFrameToAnimation(anim_HD, Render::getInstance()->createSprite("res/T3.png",Rrect(0*16,1*16,16,16)));
+    Render::getInstance()->addFrameToAnimation(anim_HD, Render::getInstance()->createSprite("res/T3.png",Rrect(1*16,1*16,16,16)));
+    anim_HL = Render::getInstance()->createAnimation(15);
+    Render::getInstance()->addFrameToAnimation(anim_HL, Render::getInstance()->createSprite("res/T3.png",Rrect(3*16,0*16,16,16)));
+    Render::getInstance()->addFrameToAnimation(anim_HL, Render::getInstance()->createSprite("res/T3.png",Rrect(3*16,1*16,16,16)));
+    Render::getInstance()->addFrameToAnimation(anim_HL, Render::getInstance()->createSprite("res/T3.png",Rrect(2*16,1*16,16,16)));
+    Render::getInstance()->addFrameToAnimation(anim_HL, Render::getInstance()->createSprite("res/T3.png",Rrect(3*16,1*16,16,16)));
+    anim_HR = Render::getInstance()->createAnimation(15);
+    Render::getInstance()->addFrameToAnimation(anim_HR, Render::getInstance()->createSprite("res/T3.png",Rrect(7*16,0*16,16,16)));
+    Render::getInstance()->addFrameToAnimation(anim_HR, Render::getInstance()->createSprite("res/T3.png",Rrect(7*16,1*16,16,16)));
+    Render::getInstance()->addFrameToAnimation(anim_HR, Render::getInstance()->createSprite("res/T3.png",Rrect(6*16,1*16,16,16)));
+    Render::getInstance()->addFrameToAnimation(anim_HR, Render::getInstance()->createSprite("res/T3.png",Rrect(7*16,1*16,16,16)));
 
 
     state= S_D;
@@ -42,6 +63,10 @@ Pengo::~Pengo(){
     r->deleteAnimation(anim_WD);
     r->deleteAnimation(anim_WL);
     r->deleteAnimation(anim_WR);
+    r->deleteAnimation(anim_HU);
+    r->deleteAnimation(anim_HD);
+    r->deleteAnimation(anim_HL);
+    r->deleteAnimation(anim_HR);
 }
 
 void Pengo::update(float dt)
@@ -50,7 +75,31 @@ void Pengo::update(float dt)
         return;
 
     this->wasUpdate = true;
-
+    if(state == H_U || state == H_D || state == H_L || state == H_R)
+    {
+        hit_Time += dt;
+        if(hit_Time>TIMEHITTED)
+        {
+            switch (state)
+            {
+            case H_U:
+                state = S_U;
+                break;
+            case H_D:
+                state = S_D;
+                break;
+            case H_L:
+                state = S_L;
+                break;
+            case H_R:
+                state = S_R;
+                break;
+            default:
+                break;
+            }
+        }
+        return;   
+    }
     if(state == S_D || state == S_U || state == S_L ||state == S_R)
     {
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
@@ -59,15 +108,23 @@ void Pengo::update(float dt)
             {
             case S_D:
                 Map::getInstance()->pengoHits(x, y+1, 2);
+                state = H_D;
+                hit_Time = 0.f;
                 break;
             case S_U:
                 Map::getInstance()->pengoHits(x, y-1, 0);
+                state = H_U;                
+                hit_Time = 0.f;
                 break;
             case S_L:
                 Map::getInstance()->pengoHits(x-1, y, 3);
+                state = H_L;
+                hit_Time = 0.f;
                 break;
             case S_R:
                 Map::getInstance()->pengoHits(x+1, y, 1);
+                state = H_R;
+                hit_Time = 0.f;
                 break;
             
             default:
@@ -176,7 +233,18 @@ void Pengo::draw()
     case W_R:
         Render::getInstance()->drawAnimation(anim_WR, Rvect((x*16+8) - delay, y*16+48), 0.f, 1.f, false);
         break;
-    
+    case H_D:
+        Render::getInstance()->drawAnimation(anim_HD, Rvect(x*16+8, y*16+48), 0.f, 1.f, false);
+        break;
+    case H_U:
+        Render::getInstance()->drawAnimation(anim_HU, Rvect(x*16+8, y*16+48), 0.f, 1.f, false);
+        break;
+    case H_L:
+        Render::getInstance()->drawAnimation(anim_HL, Rvect(x*16+8, y*16+48), 0.f, 1.f, false);
+        break;
+    case H_R:
+        Render::getInstance()->drawAnimation(anim_HR, Rvect(x*16+8, y*16+48), 0.f, 1.f, false);
+        break;
     default:
         break;
     }
