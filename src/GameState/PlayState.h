@@ -14,5 +14,6 @@ class PlayState : public IGameState
         }
         virtual void initState();
         virtual void update(float dt);
+        virtual void render();
         virtual void clear();
 };

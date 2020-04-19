@@ -11,9 +11,12 @@ void PlayState::initState()
 void PlayState::update(float dt)
 {
    Map::getInstance()->update(dt);
-   Map::getInstance()->draw();
 }
 
+void PlayState::render()
+{
+   Map::getInstance()->draw();
+}
 
 void PlayState::clear(){
 

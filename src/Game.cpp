@@ -28,13 +28,17 @@ void Game::run()
     Clock clock;
     while(Render::getInstance()->isWindowOpen())
     {
+        float interpolatedTime = clock.getInterpolated();
+        Render::getInstance()->preLoop(interpolatedTime);
+
         if(clock.canContinue())
         {
             float t = clock.getElapsedTime();
-            Render::getInstance()->preLoop(t);
             state->update(t);
-            Render::getInstance()->postLoop();
         }
+        
+        state->render();
+        Render::getInstance()->postLoop();
     }
 }
 
